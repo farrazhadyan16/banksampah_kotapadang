@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sampahs', function (Blueprint $table) {
+        Schema::create('riwayat', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_nasabah');
+            $table->enum('jenis_transaksi', ['tarik_saldo', 'setoran']);
             $table->timestamps();
+
+            $table->foreign('id_nasabah')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sampahs');
+        Schema::dropIfExists('riwayat');
     }
 };

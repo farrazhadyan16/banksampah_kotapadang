@@ -9,5 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Sampah extends Model
 {
     use HasFactory;
-    protected $table = 'sampah';
+
+    protected $table = 'sampah'; // ← beri tahu nama tabel sebenarnya
+
+    protected $fillable = [
+        'jenis_sampah',
+        'harga_satuan'
+    ];
 }

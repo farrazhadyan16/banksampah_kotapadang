@@ -9,27 +9,27 @@ class SampahController extends Controller
 {
     public function index()
     {
-        $sampahs = Sampah::all();
-        return view('sampah.index', compact('sampahs'));
+        $listsampah = Sampah::all();
+        return view('sampah.index', compact('listsampah'));
     }
-    public function edit($id)
-{
-    $sampah = Sampah::findOrFail($id);
-    return view('admin.sampah.edit', compact('sampah'));
-}
+//     public function edit($id)
+// {
+//     $sampah = Sampah::findOrFail($id);
+//     return view('admin.edit', compact('sampah'));
+// }
 
 public function update(Request $request, $id)
 {
     $request->validate([
-        'jenis_sampah' => 'required|string|max:255',
-        'harga_satuan' => 'required|numeric',
+        'jenis_sampah' => 'required|string',
+        'harga_satuan' => 'required|numeric|min:0',
+        'jumlah' => 'required|numeric|min:0',
     ]);
 
     $sampah = Sampah::findOrFail($id);
-    $data = $request->except(['_token', '_method']);
-    $sampah->update($data);
+    $sampah->update($request->only('jenis_sampah', 'harga_satuan', 'jumlah'));
 
-    return redirect()->route('sampah.index')->with('success', 'Data berhasil diperbarui!');
+    return redirect()->back()->with('success', 'Data sampah berhasil diperbarui!');
 }
 // SampahController.php
 public function destroy($id)

@@ -2,8 +2,9 @@
 
 @section('main-content')
 
-<h1 class="h3 mb-4 text-gray-800">Table Sampah</h1>
+<h1 class="h3 mb-4 text-gray-800">Table User Nasabah</h1>
 
+{{-- Pesan sukses --}}
 @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
@@ -13,9 +14,10 @@
     </div>
 @endif
 
+{{-- Pesan error validasi --}}
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Terjadi kesalahan:</strong>
+        <strong>Data tidak diperbarui:</strong>
         <ul class="mb-0 mt-2">
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -29,7 +31,7 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Sampah</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Data Nasabah</h6>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -37,59 +39,65 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Jenis Sampah</th>
-                        <th>Harga (Rp)</th>
-                        <th>Jumlah</th>
+                        <th>Nama</th>
+                        <th>Email</th>
+                        <th>No HP</th>
+                        <th>Alamat</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($listsampah as $sampah)
+                    @forelse ($listnasabah as $nasabah)
                         <tr>
-                            <td>{{ str_pad($sampah->id, '0', STR_PAD_LEFT) }}</td>
-                            <td>{{ $sampah->jenis_sampah }}</td>
-                            <td>Rp {{ number_format($sampah->harga_satuan, 0, ',', '.') }}</td>
-                            <td>{{ $sampah->jumlah }}</td>
+                            <td>{{ str_pad($nasabah->id,  '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ $nasabah->name }}</td>
+                            <td>{{ $nasabah->email }}</td>
+                            <td>{{ $nasabah->no_hp }}</td>
+                            <td>{{ $nasabah->alamat }}</td>
                             <td>
-                                {{-- Edit Button --}}
-                                <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#editModal{{ $sampah->id }}">
+                                {{-- Tombol Edit --}}
+                                <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#editModal{{ $nasabah->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
 
-                                {{-- Delete Form --}}
-                                {{-- <form action="{{ route('sampah.destroy', $sampah->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus sampah ini?')">
+                                {{-- Tombol Hapus --}}
+                                <form action="{{ route('user.destroy', $nasabah->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus user ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger">
                                         <i class="fas fa-trash"></i>
                                     </button>
-                                </form> --}}
+                                </form>
 
-                                {{-- Edit Modal --}}
-                                <div class="modal fade" id="editModal{{ $sampah->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $sampah->id }}" aria-hidden="true">
+                                {{-- Modal Edit --}}
+                                <div class="modal fade" id="editModal{{ $nasabah->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $nasabah->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
-                                        <form action="{{ route('sampah.update', $sampah->id) }}" method="POST">
+                                        <form action="{{ route('user.update', $nasabah->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Edit Sampah</h5>
+                                                    <h5 class="modal-title" id="editModalLabel{{ $nasabah->id }}">Edit Nasabah</h5>
                                                     <button type="button" class="close" data-dismiss="modal">
                                                         <span>&times;</span>
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label>Jenis Sampah</label>
-                                                        <input type="text" name="jenis_sampah" class="form-control" value="{{ old('jenis_sampah', $sampah->jenis_sampah) }}" required>
+                                                        <label>Nama</label>
+                                                        <input type="text" name="name" class="form-control" value="{{ old('name', $nasabah->name) }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Harga Satuan</label>
-                                                        <input type="number" name="harga_satuan" class="form-control" value="{{ old('harga_satuan', $sampah->harga_satuan) }}" required>
+                                                        <label>Email</label>
+                                                        <input type="email" name="email" class="form-control" value="{{ old('email', $nasabah->email) }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Jumlah</label>
-                                                        <input type="number" name="jumlah" class="form-control" value="{{ old('jumlah', $sampah->jumlah) }}" required>
+                                                        <label>No HP</label>
+                                                        <input type="number" name="no_hp" class="form-control" value="{{ old('no_hp', $nasabah->no_hp) }}" required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label>Alamat</label>
+                                                        <input type="text" name="alamat" class="form-control" value="{{ old('alamat', $nasabah->alamat) }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -105,7 +113,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center">Tidak ada data sampah</td>
+                            <td colspan="6" class="text-center">Tidak ada data nasabah</td>
                         </tr>
                     @endforelse
                 </tbody>

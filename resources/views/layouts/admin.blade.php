@@ -52,6 +52,71 @@
 
         <!-- Heading -->
         <div class="sidebar-heading">
+            {{ __('Transaksi') }}
+        </div>
+
+        <!-- Nav Item - Sampah -->
+        <li class="nav-item {{ Nav::isRoute('sampah.index') }}">
+            <a class="nav-link" href="{{ route('sampah.index') }}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>{{ __('Sampah') }}</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Order List -->
+        <li class="nav-item {{ Nav::isRoute('about') }}">
+            <a class="nav-link" href="{{ route('about') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Order List') }}</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Riwayat -->
+        <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
+            <a class="nav-link" href="{{ route('tarik.index') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Tarik Saldo') }}</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Riwayat -->
+        <li class="nav-item {{ Nav::isRoute('about') }}">
+            <a class="nav-link" href="{{ route('about') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Riwayat') }}</span>
+            </a>
+        </li>
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
+            {{ __('User') }}
+        </div>
+
+        <!-- Nav Item - Sampah -->
+        <li class="nav-item {{ Nav::isRoute('user.nasabah') }}">
+            <a class="nav-link" href="{{ route('user.nasabah') }}">
+                <i class="fas fa-fw fa-user"></i>
+                <span>{{ __('Data Nasabah') }}</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Order List -->
+        <li class="nav-item {{ Nav::isRoute('user.admin') }}">
+            <a class="nav-link" href="{{ route('user.admin') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Data Admin') }}</span>
+            </a>
+        </li>
+
+
+        <!-- Divider -->
+        <hr class="sidebar-divider">
+
+        <!-- Heading -->
+        <div class="sidebar-heading">
             {{ __('Settings') }}
         </div>
 
