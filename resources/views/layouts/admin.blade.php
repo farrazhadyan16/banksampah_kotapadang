@@ -71,7 +71,15 @@
             </a>
         </li>
 
-        <!-- Nav Item - Riwayat -->
+        <!-- Nav Item - Setoran -->
+        <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
+            <a class="nav-link" href="{{ route('tarik.index') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Setoran') }}</span>
+            </a>
+        </li>
+
+        <!-- Nav Item - Tarik Saldo -->
         <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
             <a class="nav-link" href="{{ route('tarik.index') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
@@ -80,8 +88,8 @@
         </li>
 
         <!-- Nav Item - Riwayat -->
-        <li class="nav-item {{ Nav::isRoute('about') }}">
-            <a class="nav-link" href="{{ route('about') }}">
+        <li class="nav-item {{ Nav::isRoute('riwayat.index') }}">
+            <a class="nav-link" href="{{ route('riwayat.index') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
                 <span>{{ __('Riwayat') }}</span>
             </a>

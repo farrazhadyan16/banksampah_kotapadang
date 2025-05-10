@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SampahController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TarikSaldoController;
+use App\Http\Controllers\RiwayatController;
+use App\Http\Controllers\NotaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 
@@ -49,3 +51,7 @@ Route::get('/user-admin', [UserController::class, 'showAdmin'])->name('user.admi
 Route::get('/tarik-saldo', [TarikSaldoController::class, 'index'])->name('tarik.index');
 Route::post('/tarik-saldo', [TarikSaldoController::class, 'store'])->name('tarik.store');
 Route::get('/nota-tarik/{id}', [TarikSaldoController::class, 'nota'])->name('tarik.nota');
+
+Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
+
+Route::get('/nota/{id}', [NotaController::class, 'show'])->name('nota.show');

@@ -12,12 +12,30 @@ class Riwayat extends Model
     protected $table = 'riwayat';
 
     protected $fillable = [
-        'id_nasabah',
-        'jenis_transaksi',
+    'id_nasabah',
+    'id_riwayat',
+    'jumlah',
+    'jenis_transaksi',
+    'user_id', // atau id_nasabah
+    'created_at'
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class, 'id_nasabah');
     }
+    public function nasabah()
+    {
+        return $this->belongsTo(User::class, 'id_nasabah');
+    }
+    public function tarikSaldo()
+    {
+        return $this->hasOne(TarikSaldo::class, 'id_riwayat');
+    }
+
+    public function setorSampah()
+    {
+        return $this->hasOne(SetorSampah::class, 'id_riwayat');
+    }
+
 }

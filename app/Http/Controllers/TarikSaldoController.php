@@ -46,13 +46,13 @@ class TarikSaldoController extends Controller
     ]);
 
     // 3. Arahkan ke halaman nota
-    return redirect()->route('tarik.nota', $tarik->id);
+    return redirect()->route('nota.show', $riwayat->id);
 }
 
-    public function nota($id)
-    {
-        $tarik = TarikSaldo::with('user')->findOrFail($id);
+    // public function nota($id)
+    // {
+    //     $tarik = TarikSaldo::with('user')->findOrFail($id);
 
-        return view('nota_tarik', compact('tarik'));
-    }
+    //     return view('nota', compact('tarik'));
+    // }
 }
