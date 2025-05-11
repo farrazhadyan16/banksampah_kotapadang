@@ -58,8 +58,8 @@
                         <th>No Referensi</th>
                         @if (Auth::user()->role !== 'nasabah')
                             <th>Nama Nasabah</th>
+                            <th>No Rekening</th>
                                 @if (Auth::user()->role === 'admin' || Auth::user()->role === 'superadmin')
-                                <th>No Rekening</th>
                             @endif
                         @endif
                         <th>Jenis Transaksi</th>
@@ -73,8 +73,8 @@
                             <td>{{ $loop->iteration + ($riwayat->currentPage() - 1) * $riwayat->perPage() }}</td>
                             <td>{{ str_pad($data->id, '0', STR_PAD_LEFT) }}</td>
                             @if (Auth::user()->role !== 'nasabah')
-                                <td>{{ $data->nasabah->name ?? '-' }}</td>
-                                    @if (Auth::user()->role === 'admin' || Auth::user()->role === 'superadmin')
+                            <td>{{ $data->nasabah ? trim($data->nasabah->name . ' ' . ($data->nasabah->last_name ?? '')) : '-' }}</td>
+                                    @if (Auth::user()->role === 'admin' || Auth::user()->role === 'super_admin')
                                         <td>{{ $data->nasabah->no_rek ?? '-' }}</td>
                                     @endif
                             @endif

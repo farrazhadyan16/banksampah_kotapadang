@@ -7,6 +7,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TarikSaldoController;
 use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\NotaController;
+use App\Http\Controllers\OrderListController;
+use App\Http\Controllers\SetorSampahController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 
@@ -55,3 +57,22 @@ Route::get('/nota-tarik/{id}', [TarikSaldoController::class, 'nota'])->name('tar
 Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat.index');
 
 Route::get('/nota/{id}', [NotaController::class, 'show'])->name('nota.show');
+
+Route::get('/admin/create', [UserController::class, 'createAdmin'])->name('admin.create');
+Route::post('/admin/store', [UserController::class, 'store'])->name('admin.store');
+Route::get('/admin', [UserController::class, 'showAdmin'])->name('admin.show');
+
+Route::middleware(['auth'])->group(function () {
+    // Tampilkan form create nasabah
+Route::get('/nasabah/create', [UserController::class, 'createNasabah'])->name('nasabah.create');
+    // Simpan nasabah
+    Route::post('/nasabah', [UserController::class, 'store'])->name('nasabah.store');
+    // Halaman index nasabah
+    Route::get('/nasabah', [UserController::class, 'showNasabah'])->name('nasabah.show');
+});
+
+Route::get('/orderlist', [OrderListController::class, 'showOrderList'])->name('orderlist');
+Route::put('/orderlist/{id}/status', [OrderListController::class, 'updateStatus'])->name('orderlist.updateStatus');
+
+Route::get('/setorsampah', [SetorSampahController::class, 'create'])->name('setorsampah.create');
+Route::post('/setorsampah', [SetorSampahController::class, 'store'])->name('setorsampah.store');

@@ -11,15 +11,17 @@ class SetorSampah extends Model
 
     protected $table = 'setoran';
 
-    protected $fillable = [
-        'id',
-        'id_riwayat',
-        'jumlah_rp',
-        // tambahkan kolom lain jika ada
-    ];
+    protected $fillable = ['id_nasabah', 'id_sampah', 'jumlah', 'total_harga', 'id_riwayat','status'];
 
     public function riwayat()
     {
         return $this->belongsTo(Riwayat::class, 'id_riwayat');
     }
+    // In Setoran.php
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_nasabah');
+    }
+
+
 }

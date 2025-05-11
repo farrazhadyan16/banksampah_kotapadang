@@ -14,6 +14,7 @@ class Riwayat extends Model
     protected $fillable = [
     'id_nasabah',
     'id_riwayat',
+    'no_rek',
     'jumlah',
     'jenis_transaksi',
     'user_id', // atau id_nasabah

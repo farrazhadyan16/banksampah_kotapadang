@@ -30,9 +30,19 @@
 @endif
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Data Nasabah</h6>
-    </div>
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <h6 class="m-0 font-weight-bold text-primary">Data Nasabah</h6>
+
+    @php
+        $userRole = auth()->user()->role ?? '';
+    @endphp
+
+    @if (in_array($userRole, ['admin', 'super_admin']))
+        <a href="{{ route('nasabah.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Tambah Nasabah
+        </a>
+    @endif
+</div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">

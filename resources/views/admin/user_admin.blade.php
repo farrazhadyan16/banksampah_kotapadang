@@ -28,9 +28,21 @@
 @endif
 
 <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Data Admin</h6>
-    </div>
+    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <h6 class="m-0 font-weight-bold text-primary">Data Admin</h6>
+
+    @php
+        $userRole = auth()->user()->role ?? '';
+    @endphp
+
+    @if ($userRole === 'super_admin')
+        <a href="{{ route('admin.create') }}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Tambah Admin
+        </a>
+    @endif
+</div>
+
+
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">

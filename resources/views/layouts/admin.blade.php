@@ -64,18 +64,18 @@
         </li>
 
         <!-- Nav Item - Order List -->
-        <li class="nav-item {{ Nav::isRoute('about') }}">
-            <a class="nav-link" href="{{ route('about') }}">
+        <li class="nav-item {{ Nav::isRoute('orderlist') }}">
+            <a class="nav-link" href="{{ route('orderlist') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
                 <span>{{ __('Order List') }}</span>
             </a>
         </li>
 
         <!-- Nav Item - Setoran -->
-        <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
-            <a class="nav-link" href="{{ route('tarik.index') }}">
+        <li class="nav-item {{ Nav::isRoute('setorsampah.create') }}">
+            <a class="nav-link" href="{{ route('setorsampah.create') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
-                <span>{{ __('Setoran') }}</span>
+                <span>{{ __('Setor Sampah') }}</span>
             </a>
         </li>
 

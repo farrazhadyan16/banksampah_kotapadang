@@ -17,7 +17,7 @@
                 <p><strong>Jenis Transaksi:</strong>
                     @if($riwayat->jenis_transaksi == 'tarik_saldo')
                         Penarikan Saldo
-                    @elseif($riwayat->jenis_transaksi == 'setor_sampah')
+                    @elseif($riwayat->jenis_transaksi == 'setoran')
                         Penyetoran Sampah
                     @else
                         {{ ucfirst(str_replace('_', ' ', $riwayat->jenis_transaksi)) }}
@@ -31,9 +31,9 @@
                     if ($riwayat->jenis_transaksi === 'tarik_saldo') {
                         // Asumsi relasi 'tarikSaldo' ada di model Riwayat
                         $nominal = $riwayat->tarikSaldo->jumlah ?? 0;
-                    } elseif ($riwayat->jenis_transaksi === 'setor_sampah') {
+                    } elseif ($riwayat->jenis_transaksi === 'setoran') {
                         // Jika satu transaksi bisa memiliki banyak detail setor_sampah
-                        $nominal = $riwayat->setorSampah->sum('jumlah_rp') ?? 0;
+                        $nominal = $riwayat->setorSampah->total_harga ?? 0;
                     }
                 @endphp
 
