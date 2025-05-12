@@ -11,7 +11,7 @@ class SetorSampah extends Model
 
     protected $table = 'setoran';
 
-    protected $fillable = ['id_nasabah', 'id_sampah', 'jumlah', 'total_harga', 'id_riwayat','status'];
+    protected $fillable = ['id_nasabah', 'id_sampah', 'jumlah_sampah', 'total_harga', 'id_riwayat','status'];
 
     public function riwayat()
     {

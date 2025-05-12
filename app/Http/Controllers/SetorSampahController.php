@@ -14,7 +14,7 @@ class SetorSampahController extends Controller
 {
    public function create()
 {
-    $listnasabah = User::where('role', 'nasabah')->select('id', 'name')->get();
+    $listnasabah = User::where('role', 'nasabah')->select('id', 'name','last_name')->get();
     $listsampah = Sampah::all(); // atau sesuai nama model kamu
 
     return view('setorsampah', compact('listnasabah', 'listsampah'));
@@ -64,6 +64,9 @@ $jumlah_sampah = $request->input('jumlah_sampah');
 
     // Update jumlah di tabel sampah
     $sampah->increment('jumlah', $jumlah_sampah);
+
+    // Tambahkan saldo ke user (kolom 'uang' di tabel users)
+    User::where('id', $nasabahId)->increment('saldo', $totalHarga);
 
     return redirect()->route('nota.show', ['id' => $riwayat->id]);
 }

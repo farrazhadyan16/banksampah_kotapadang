@@ -43,12 +43,11 @@
                 @if(Auth::user()->role != 'nasabah')
                     <label for="id_nasabah">Pilih Nasabah</label>
                     <select name="id_nasabah" required class="form-control">
-    <option value="">-- Pilih Nasabah --</option>
-    @foreach($listnasabah as $nasabah)
-        <option value="{{ $nasabah->id }}">{{ $nasabah->name }}</option>
-    @endforeach
-</select>
-
+                        <option value="">-- Pilih Nasabah --</option>
+                        @foreach($listnasabah as $nasabah)
+                            <option value="{{ $nasabah->id }}">{{ $nasabah->name }} {{ $nasabah->last_name }}</option>
+                        @endforeach
+                    </select>
                 @endif
             </div>
 
