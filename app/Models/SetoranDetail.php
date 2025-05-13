@@ -1,0 +1,21 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class SetoranDetail extends Model
+{
+    protected $table = 'setoran_detail';
+
+    protected $fillable = [
+        'id_setoran',
+        'id_sampah',
+        'jumlah_sampah',
+        'harga_satuan',
+        'total_harga',
+    ];
+
+    public $timestamps = false;
+    
+}

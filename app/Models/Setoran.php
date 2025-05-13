@@ -20,5 +20,10 @@ class Setoran extends Model
     ];
 
     public $timestamps = false; // Karena kamu pakai manual created_at dan updated_at
+
+    public function detail()
+    {
+        return $this->hasMany(SetoranDetail::class, 'id_setoran');
+    }
     
 }
