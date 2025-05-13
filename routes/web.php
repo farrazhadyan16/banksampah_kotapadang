@@ -9,19 +9,10 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\NotaController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\SetorSampahController;
+use App\Http\Controllers\SetoranController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -76,3 +67,13 @@ Route::put('/orderlist/{id}/status', [OrderListController::class, 'updateStatus'
 
 Route::get('/setorsampah', [SetorSampahController::class, 'create'])->name('setorsampah.create');
 Route::post('/setorsampah', [SetorSampahController::class, 'store'])->name('setorsampah.store');
+
+Route::get('/setoran', function () {
+    return view('setoran');
+})->name('setoran');
+
+Route::post('/setor/konfirmasi', [SetoranController::class, 'konfirmasiSetor'])->name('setor.konfirmasi');
+
+Route::post('/konfirmasi', [SetoranController::class, 'konfirmasi'])->name('setoran.konfirmasi');
+// web.php
+Route::post('/simpan', [SetoranController::class, 'simpan'])->name('setoran.simpan');

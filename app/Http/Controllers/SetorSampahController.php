@@ -60,6 +60,7 @@ $jumlah_sampah = $request->input('jumlah_sampah');
         'jumlah_sampah' => $jumlah_sampah,
         'total_harga' => $totalHarga,
         'id_riwayat' => $riwayat->id,
+        'status' => 'processing',
     ]);
 
     // Update jumlah di tabel sampah
@@ -70,6 +71,26 @@ $jumlah_sampah = $request->input('jumlah_sampah');
 
     return redirect()->route('nota.show', ['id' => $riwayat->id]);
 }
+
+public function konfirmasiSetoran($id)
+{
+    $setoran = SetorSampah::findOrFail($id);
+
+    // Pastikan hanya update kalau status masih pending
+    if ($setoran->status !== 'completed') {
+        // Tambah saldo ke user
+        User::where('id', $setoran->id_nasabah)->increment('saldo', $setoran->total_harga);
+
+        // Tambah jumlah ke tabel sampah
+        Sampah::where('id', $setoran->id_sampah)->increment('jumlah', $setoran->jumlah_sampah);
+
+        // Update status jadi completed
+        $setoran->update(['status' => 'completed']);
+    }
+
+    return redirect()->back()->with('success', 'Setoran berhasil dikonfirmasi.');
+}
+
 
 
 }

@@ -79,6 +79,14 @@
             </a>
         </li>
 
+        <!-- Nav Item - Setoran -->
+        <li class="nav-item {{ Nav::isRoute('setoran') }}">
+            <a class="nav-link" href="{{ route('setoran') }}">
+                <i class="fas fa-fw fa-hands-helping"></i>
+                <span>{{ __('Setoran') }}</span>
+            </a>
+        </li>
+
         <!-- Nav Item - Tarik Saldo -->
         <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
             <a class="nav-link" href="{{ route('tarik.index') }}">
