@@ -367,7 +367,7 @@
         <footer class="sticky-footer bg-white">
             <div class="container my-auto">
                 <div class="copyright text-center my-auto">
-                    <span>Maintained by <a href="https://github.com/aleckrh" target="_blank">AleckRH</a>. {{ now()->year }}</span>
+                    <span>Maintained by <a href="https://github.com/farrazhadyan16" target="_blank">Farraz Hadyan</a>. {{ now()->year }}</span>
                 </div>
             </div>
         </footer>
