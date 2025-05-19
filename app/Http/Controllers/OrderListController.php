@@ -36,13 +36,15 @@ public function showOrderList(Request $request)
             $query->whereDate('created_at', $request->tanggal);
         }
 
-        // Sort
-        if ($request->filled('sort_by')) {
-            $column = $request->sort_by;
-            $direction = $request->get('sort_direction', 'asc');
-            if (in_array($column, ['id_riwayat', 'id_nasabah', 'created_at'])) {
-                $query->orderBy($column, $direction);
-            }
+
+
+        // Ambil parameter sort_by dan sort_direction, dengan default
+        $sortBy = $request->input('sort_by', 'id_riwayat');
+        $sortDirection = $request->input('sort_direction', 'desc');
+
+        // Validasi kolom sorting yang diizinkan
+        if (in_array($sortBy, ['id_riwayat', 'id_nasabah', 'created_at'])) {
+            $query->orderBy($sortBy, $sortDirection);
         }
 
         $orders = $query->paginate(10)->appends($request->all());

@@ -4,13 +4,13 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Laravel SB Admin 2">
+    <meta name="description" content="Bank Sampah Kota Padang">
     <meta name="author" content="Alejandro RH">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'Bank Sampah Kota Padang') }}</title>
 
     <!-- Fonts -->
     <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet">
@@ -20,7 +20,7 @@
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
 
     <!-- Favicon -->
-    <link href="{{ asset('img/favicon.png') }}" rel="icon" type="image/png">
+    <link href="{{ asset('img/logo.png') }}" rel="icon" type="image/png">
 </head>
 <body id="page-top">
 
@@ -32,9 +32,9 @@
         <!-- Sidebar - Brand -->
         <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url('/home') }}">
             <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
+        <img src="{{ asset('img/logo.png') }}" alt="Logo" style="width: 40px; height: 40px;">
             </div>
-            <div class="sidebar-brand-text mx-3">SB Admin <sup>2</sup></div>
+            <div class="sidebar-brand-text mx-3">Bank Sampah</div>
         </a>
 
         <!-- Divider -->
