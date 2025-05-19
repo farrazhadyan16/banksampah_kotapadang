@@ -17,5 +17,12 @@ class SetoranDetail extends Model
     ];
 
     public $timestamps = false;
+
+public function sampah()
+{
+    return $this->belongsTo(Sampah::class, 'id_sampah');
+}
+
+
     
 }

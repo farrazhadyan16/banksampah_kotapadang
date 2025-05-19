@@ -37,6 +37,44 @@
                     }
                 @endphp
 
+                @if($riwayat->jenis_transaksi === 'setoran' && $riwayat->setorSampah)
+                    <hr>
+                    <h5>Rincian Setoran Sampah</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Jenis Sampah</th>
+                                <th>Jumlah (Kg)</th>
+                                <th>Harga per Kg</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @php $totalSetoran = 0; @endphp
+                            @foreach ($riwayat->setorSampah->setoranDetail as $detail)
+                                @php
+                                    $jenis = $detail->sampah->id_sampah ?? 'Tidak diketahui';
+                                    $jumlah = $detail->jumlah_sampah;
+                                    $harga = $detail->harga_satuan;
+                                    $subtotal = $jumlah * $harga;
+                                    $totalSetoran += $subtotal;
+                                @endphp
+                                <tr>
+                                    <td>{{ $jenis }}</td>
+                                    <td>{{ $jumlah }} kg</td>
+                                    <td>Rp {{ number_format($harga, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($subtotal, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="3" class="text-end"><strong>Total</strong></td>
+                                <td><strong>Rp {{ number_format($totalSetoran, 0, ',', '.') }}</strong></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                @endif
+
+
                 <p><strong>Nominal:</strong> Rp {{ number_format($nominal, 0, ',', '.') }}</p>
             </div>
 

@@ -23,5 +23,11 @@ class SetorSampah extends Model
         return $this->belongsTo(User::class, 'id_nasabah');
     }
 
+public function setoranDetail()
+{
+    return $this->hasMany(SetoranDetail::class, 'no', 'no');
+}
+
+
 
 }
