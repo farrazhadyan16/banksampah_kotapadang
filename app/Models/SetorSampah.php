@@ -25,7 +25,7 @@ class SetorSampah extends Model
 
 public function setoranDetail()
 {
-    return $this->hasMany(SetoranDetail::class, 'no', 'no');
+    return $this->hasMany(SetoranDetail::class, 'id_setoran', 'id'); // disarankan pakai id_setoran
 }
 
 

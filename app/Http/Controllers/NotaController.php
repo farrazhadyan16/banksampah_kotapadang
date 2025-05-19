@@ -9,7 +9,7 @@ class NotaController extends Controller
 {
     public function show($id)
     {
-    $riwayat = Riwayat::with(['nasabah', 'tarikSaldo', 'setorSampah'])->findOrFail($id);
+    $riwayat = Riwayat::with(['nasabah', 'tarikSaldo', 'setorSampah.setoranDetail.sampah'])->findOrFail($id);
 
         return view('nota', compact('riwayat'));
     }

@@ -53,10 +53,10 @@
                             @php $totalSetoran = 0; @endphp
                             @foreach ($riwayat->setorSampah->setoranDetail as $detail)
                                 @php
-                                    $jenis = $detail->sampah->id_sampah ?? 'Tidak diketahui';
+                                   $jenis = $detail->sampah->nama ?? 'Tidak diketahui';
                                     $jumlah = $detail->jumlah_sampah;
                                     $harga = $detail->harga_satuan;
-                                    $subtotal = $jumlah * $harga;
+                                    $subtotal = $detail->total_harga;
                                     $totalSetoran += $subtotal;
                                 @endphp
                                 <tr>
