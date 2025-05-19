@@ -128,11 +128,11 @@ class SetoranController extends Controller
             DB::commit();
             session()->forget('data_setoran');
 
-            return redirect()->route('setoran')->with('success', 'Setoran berhasil disimpan!');
+            // Redirect ke halaman nota
+        return redirect()->route('nota.show', $riwayatId->id);
         } catch (\Exception $e) {
-            DB::rollBack();
-            logger()->error('ERROR saat proses setoran: ' . $e->getMessage());
-            return redirect()->route('setoran')->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            DB::rollback();
+        return back()->with('error', 'Gagal menyimpan setoran: ' . $e->getMessage());
         }
     }
 
