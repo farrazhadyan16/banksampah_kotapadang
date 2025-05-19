@@ -129,7 +129,7 @@ class SetoranController extends Controller
             session()->forget('data_setoran');
 
             // Redirect ke halaman nota
-        return redirect()->route('nota.show', $riwayatId->id);
+        return redirect()->route('nota.show', $riwayatId);
         } catch (\Exception $e) {
             DB::rollback();
         return back()->with('error', 'Gagal menyimpan setoran: ' . $e->getMessage());
