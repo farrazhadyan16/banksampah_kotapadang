@@ -77,3 +77,5 @@ Route::post('/setor/konfirmasi', [SetoranController::class, 'konfirmasiSetor'])-
 Route::post('/konfirmasi', [SetoranController::class, 'konfirmasi'])->name('setoran.konfirmasi');
 // web.php
 Route::post('/simpan', [SetoranController::class, 'simpan'])->name('setoran.simpan');
+
+Route::post('/setoran/konfirmasi', [SetoranController::class, 'konfirmasiSetor'])->name('setor.konfirmasi');

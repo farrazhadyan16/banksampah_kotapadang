@@ -6,11 +6,14 @@
         @csrf
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body text-center">
-                <h4 class="mb-4">Setor Sampah - Buka Kamera</h4>
-                <video id="camera" autoplay playsinline class="rounded mb-3" style="width: 100%; max-width: 600px;"></video>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
-                    <button type="button" onclick="capture()" class="btn btn-secondary">Ambil Gambar</button>
+                <h4 class="mb-4">Setor Sampah - Deteksi Otomatis Kamera</h4>
+
+                <div style="position: relative; width: 100%; max-width: 600px; margin: auto;">
+                    <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px;"></video>
+                    <canvas id="overlay" style="position: absolute; top: 0; left: 0; width: 100%;"></canvas>
                 </div>
+
+                <p id="detectedLabel" class="mt-3 text-success fw-bold"></p>
             </div>
         </div>
 
@@ -44,21 +47,82 @@
 </div>
 
 <script>
-    const video = document.getElementById('camera');
+const video = document.getElementById('camera');
+const canvas = document.getElementById('overlay');
+const ctx = canvas.getContext('2d');
 
-    async function startCamera() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-            video.srcObject = stream;
-        } catch (err) {
-            alert('Gagal mengakses kamera: ' + err.message);
+// Start Kamera
+async function startCamera() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+        width: { ideal: 640 },
+        height: { ideal: 480 },
+        facingMode: "environment"  // opsional: untuk pakai kamera belakang di HP
+    }
+});
+
+        video.srcObject = stream;
+
+        video.onloadedmetadata = () => {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Mulai deteksi berkala
+            setInterval(sendFrameToFlask, 1500); // Kirim tiap 1.5 detik
+        };
+    } catch (err) {
+        alert('Gagal mengakses kamera: ' + err.message);
+    }
+}
+
+async function sendFrameToFlask() {
+    // Ambil frame
+    const tmpCanvas = document.createElement('canvas');
+    tmpCanvas.width = video.videoWidth;
+    tmpCanvas.height = video.videoHeight;
+    tmpCanvas.getContext('2d').drawImage(video, 0, 0);
+    const imageBase64 = tmpCanvas.toDataURL('image/jpeg').split(',')[1];
+
+    try {
+        const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: imageBase64 }),
+        });
+
+        const result = await response.json();
+
+        // Tampilkan bounding box image ke canvas overlay
+        if (result.image_with_boxes) {
+            const image = new Image();
+            image.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            };
+            image.src = "data:image/jpeg;base64," + result.image_with_boxes;
         }
-    }
 
-    function capture() {
-        alert('Kamera berjalan. Tambahkan logika simpan gambar di sini.');
-    }
+        // Tampilkan hasil deteksi teks
+        if (result.detected && result.detected.length > 0) {
+            document.getElementById('detectedLabel').innerText = "Terdeteksi: " + result.detected.join(', ');
 
-    startCamera();
+            // Isi otomatis input berdasarkan deteksi
+            result.detected.forEach(item => {
+                const name = item.toLowerCase().replace(/\s+/g, '_');
+                const input = document.querySelector(`input[name='jumlah_${name}']`);
+                if (input) input.value = 1;
+            });
+        } else {
+            document.getElementById('detectedLabel').innerText = "Tidak ada sampah terdeteksi.";
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+    } catch (err) {
+        console.error('Error saat mengirim ke Flask:', err);
+    }
+}
+
+startCamera();
 </script>
 @endsection
