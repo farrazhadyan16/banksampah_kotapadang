@@ -6,7 +6,7 @@
         @csrf
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body text-center">
-                <h4 class="mb-4">Setor Sampah - Deteksi Otomatis Kamera</h4>
+                <h4 class="mb-4">Setoran Sampah - Deteksi Otomatis Kamera</h4>
 
                 <div style="position: relative; width: 100%; max-width: 600px; margin: auto;">
                     <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px; transform: scaleX(-1);"></video>
