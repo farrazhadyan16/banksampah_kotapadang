@@ -72,14 +72,6 @@
         </li>
 
         <!-- Nav Item - Setoran -->
-        <li class="nav-item {{ Nav::isRoute('setorsampah.create') }}">
-            <a class="nav-link" href="{{ route('setorsampah.create') }}">
-                <i class="fas fa-fw fa-hands-helping"></i>
-                <span>{{ __('Setor Sampah') }}</span>
-            </a>
-        </li>
-
-        <!-- Nav Item - Setoran -->
         <li class="nav-item {{ Nav::isRoute('setoran') }}">
             <a class="nav-link" href="{{ route('setoran') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
