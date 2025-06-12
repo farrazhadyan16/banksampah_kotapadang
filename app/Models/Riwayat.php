@@ -34,9 +34,8 @@ class Riwayat extends Model
         return $this->hasOne(TarikSaldo::class, 'id_riwayat');
     }
 
-    public function setorSampah()
+    public function setoran()
     {
-        return $this->hasOne(SetorSampah::class, 'id_riwayat');
+        return $this->hasOne(Setoran::class, 'id_riwayat');
     }
-
 }

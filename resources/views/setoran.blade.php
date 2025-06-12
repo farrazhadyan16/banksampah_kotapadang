@@ -24,7 +24,7 @@
 
         <div class="card shadow-sm">
             <div class="card-body">
-                <h5 class="mb-3">Form Setor Sampah</h5>
+                <h5 class="mb-3">Form Setoran Sampah</h5>
 
                 @php
                     $sampah = ['Botol Plastik', 'Kaleng', 'Ban Karet', 'Botol Kaca', 'Galon'];

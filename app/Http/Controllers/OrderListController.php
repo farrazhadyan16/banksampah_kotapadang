@@ -3,46 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SetorSampah;
-
+use App\Models\Setoran;
 
 class OrderListController extends Controller
 {
-public function updateStatus(Request $request, $id)
-{
-    $request->validate([
-        'status' => 'required|in:Completed,Processing,Rejected',
-    ]);
-
-    $order = SetorSampah::findOrFail($id);
-    $order->status = $request->status;
-    $order->save();
-
-    $order->refresh();
-
-    return redirect()->route('orderlist')->with('success', 'Status berhasil diperbarui.');
-}
-public function showOrderList(Request $request)
+    public function updateStatus(Request $request, $id)
     {
-        $query = SetorSampah::with('user');
+        $request->validate([
+            'status' => 'required|in:Completed,Processing,Rejected',
+        ]);
+
+        $order = Setoran::findOrFail($id);
+        $order->status = $request->status;
+        $order->save();
+
+        $order->refresh();
+
+        return redirect()->route('orderlist')->with('success', 'Status berhasil diperbarui.');
+    }
+
+    public function showOrderList(Request $request)
+    {
+        $query = Setoran::with('user');
 
         // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
 
-        // Filter by tanggal (ubah 'created_at' jika kolomnya berbeda)
+        // Filter by tanggal
         if ($request->filled('tanggal')) {
             $query->whereDate('created_at', $request->tanggal);
         }
 
-
-
-        // Ambil parameter sort_by dan sort_direction, dengan default
+        // Sorting
         $sortBy = $request->input('sort_by', 'id_riwayat');
         $sortDirection = $request->input('sort_direction', 'desc');
 
-        // Validasi kolom sorting yang diizinkan
         if (in_array($sortBy, ['id_riwayat', 'id_nasabah', 'created_at'])) {
             $query->orderBy($sortBy, $sortDirection);
         }
@@ -51,5 +48,4 @@ public function showOrderList(Request $request)
 
         return view('orderlist', compact('orders'));
     }
-
 }

@@ -23,22 +23,18 @@
                         {{ ucfirst(str_replace('_', ' ', $riwayat->jenis_transaksi)) }}
                     @endif
                 </p>
-
                 <hr>
 
                 @php
                     $nominal = 0;
                     if ($riwayat->jenis_transaksi === 'tarik_saldo') {
-                        // Asumsi relasi 'tarikSaldo' ada di model Riwayat
                         $nominal = $riwayat->tarikSaldo->jumlah ?? 0;
                     } elseif ($riwayat->jenis_transaksi === 'setoran') {
-                        // Jika satu transaksi bisa memiliki banyak detail setor_sampah
-                        $nominal = $riwayat->setorSampah->total_harga ?? 0;
+                        $nominal = $riwayat->setoran->total_harga ?? 0;
                     }
                 @endphp
 
-                @if($riwayat->jenis_transaksi === 'setoran' && $riwayat->setorSampah)
-                    <hr>
+                @if($riwayat->jenis_transaksi === 'setoran' && $riwayat->setoran)
                     <h5>Rincian Setoran Sampah</h5>
                     <table class="table table-bordered">
                         <thead>
@@ -51,7 +47,7 @@
                         </thead>
                         <tbody>
                             @php $totalSetoran = 0; @endphp
-                            @foreach ($riwayat->setorSampah->setoranDetail as $detail)
+                            @foreach ($riwayat->setoran->setoranDetail as $detail)
                                 @php
                                     $jenis = $detail->sampah->jenis_sampah ?? 'Tidak diketahui';
                                     $jumlah = $detail->jumlah_sampah;
@@ -73,7 +69,6 @@
                         </tbody>
                     </table>
                 @endif
-
 
                 <p><strong>Nominal:</strong> Rp {{ number_format($nominal, 0, ',', '.') }}</p>
             </div>
