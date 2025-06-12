@@ -9,11 +9,16 @@
                 <h4 class="mb-4">Setor Sampah - Deteksi Otomatis Kamera</h4>
 
                 <div style="position: relative; width: 100%; max-width: 600px; margin: auto;">
-                    <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px;"></video>
-                    <canvas id="overlay" style="position: absolute; top: 0; left: 0; width: 100%;"></canvas>
+                    <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px; transform: scaleX(-1);"></video>
+
+                    <div class="text-center mt-3">
+                        <button type="button" id="captureBtn" class="btn btn-secondary">Ambil Gambar</button>
+                    </div>
                 </div>
 
                 <p id="detectedLabel" class="mt-3 text-success fw-bold"></p>
+
+                <div class="mt-4" id="capturedImages"></div>
             </div>
         </div>
 
@@ -29,7 +34,7 @@
                 <div class="row mb-3">
                     <div class="col-md-4">
                         <label>Jumlah {{ $item }}</label>
-                        <input type="number" name="jumlah_{{ strtolower(str_replace(' ', '_', $item)) }}" class="form-control" value="0">
+                        <input type="number" name="jumlah_{{ strtolower(str_replace(' ', '_', $item)) }}" class="form-control" value="0" min="0">
                     </div>
                     <div class="col-md-4">
                         <label>Harga {{ $item }}</label>
@@ -39,49 +44,47 @@
                 @endforeach
 
                 <div class="text-end mt-4">
-                    <button type="submit" class="btn btn-primary">Kirim</button>
+                    <button type="submit" class="btn btn-primary ms-2">Konfirmasi Setor</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
 
+{{-- JavaScript --}}
 <script>
 const video = document.getElementById('camera');
-const canvas = document.getElementById('overlay');
-const ctx = canvas.getContext('2d');
+let capturedImages = [];
+let detectedCounter = {};
 
-// Start Kamera
+// Mulai Kamera
 async function startCamera() {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-        width: { ideal: 640 },
-        height: { ideal: 480 },
-        facingMode: "environment"  // opsional: untuk pakai kamera belakang di HP
-    }
-});
-
+            video: {
+                width: { ideal: 640 },
+                height: { ideal: 480 },
+                facingMode: "environment"
+            }
+        });
         video.srcObject = stream;
-
-        video.onloadedmetadata = () => {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            // Mulai deteksi berkala
-            setInterval(sendFrameToFlask, 1500); // Kirim tiap 1.5 detik
-        };
     } catch (err) {
         alert('Gagal mengakses kamera: ' + err.message);
     }
 }
 
-async function sendFrameToFlask() {
-    // Ambil frame
+startCamera();
+
+document.getElementById('captureBtn').addEventListener('click', async () => {
     const tmpCanvas = document.createElement('canvas');
     tmpCanvas.width = video.videoWidth;
     tmpCanvas.height = video.videoHeight;
-    tmpCanvas.getContext('2d').drawImage(video, 0, 0);
+    const tmpCtx = tmpCanvas.getContext('2d');
+
+    tmpCtx.translate(tmpCanvas.width, 0);
+    tmpCtx.scale(-1, 1);
+    tmpCtx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height);
+
     const imageBase64 = tmpCanvas.toDataURL('image/jpeg').split(',')[1];
 
     try {
@@ -93,36 +96,96 @@ async function sendFrameToFlask() {
 
         const result = await response.json();
 
-        // Tampilkan bounding box image ke canvas overlay
         if (result.image_with_boxes) {
-            const image = new Image();
-            image.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+            const rawImg = new Image();
+            rawImg.onload = () => {
+                const mirrorCanvas = document.createElement('canvas');
+                mirrorCanvas.width = rawImg.width;
+                mirrorCanvas.height = rawImg.height;
+                const ctx = mirrorCanvas.getContext('2d');
+
+                ctx.translate(mirrorCanvas.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(rawImg, 0, 0);
+
+                const mirroredBase64 = mirrorCanvas.toDataURL('image/jpeg');
+                capturedImages.unshift({
+                    src: mirroredBase64,
+                    detected: result.detected.map(item => item.toLowerCase().replace(/\s+/g, '_'))
+                });
+
+                renderCapturedImages();
             };
-            image.src = "data:image/jpeg;base64," + result.image_with_boxes;
+            rawImg.src = "data:image/jpeg;base64," + result.image_with_boxes;
         }
 
-        // Tampilkan hasil deteksi teks
-        if (result.detected && result.detected.length > 0) {
-            document.getElementById('detectedLabel').innerText = "Terdeteksi: " + result.detected.join(', ');
+if (result.detected && result.detected.length > 0) {
+    document.getElementById('detectedLabel').innerText = "Terdeteksi: " + result.detected.join(', ');
 
-            // Isi otomatis input berdasarkan deteksi
-            result.detected.forEach(item => {
-                const name = item.toLowerCase().replace(/\s+/g, '_');
-                const input = document.querySelector(`input[name='jumlah_${name}']`);
-                if (input) input.value = 1;
-            });
-        } else {
-            document.getElementById('detectedLabel').innerText = "Tidak ada sampah terdeteksi.";
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const countMap = result.detected.reduce((acc, item) => {
+        const key = item.toLowerCase().replace(/\s+/g, '_');
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {});
+
+    // Perbarui nilai input dan counter
+    Object.entries(countMap).forEach(([name, count]) => {
+        detectedCounter[name] = (detectedCounter[name] || 0) + count;
+
+        const input = document.querySelector(`input[name='jumlah_${name}']`);
+        if (input) {
+            const current = parseInt(input.value || '0');
+            input.value = current + count;
         }
-
-    } catch (err) {
-        console.error('Error saat mengirim ke Flask:', err);
-    }
+    });
+} else {
+    document.getElementById('detectedLabel').innerText = "Tidak ada sampah terdeteksi.";
 }
 
-startCamera();
+
+    } catch (err) {
+        console.error('Gagal kirim ke Flask:', err);
+    }
+});
+
+function renderCapturedImages() {
+    const container = document.getElementById('capturedImages');
+    container.innerHTML = '';
+
+    capturedImages.forEach((imageData, index) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'position-relative mb-3';
+
+        const img = new Image();
+        img.src = imageData.src;
+        img.className = 'img-fluid rounded shadow-sm';
+        img.style.maxWidth = '600px';
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn btn-danger btn-sm position-absolute';
+        deleteBtn.innerText = 'Hapus';
+        deleteBtn.style.top = '10px';
+        deleteBtn.style.right = '10px';
+        deleteBtn.onclick = () => {
+            imageData.detected.forEach(item => {
+                const input = document.querySelector(`input[name='jumlah_${item}']`);
+                if (input) {
+                    const current = parseInt(input.value || '0');
+                    input.value = Math.max(0, current - 1);
+                    detectedCounter[item] = Math.max(0, (detectedCounter[item] || 1) - 1);
+                }
+            });
+
+            capturedImages.splice(index, 1);
+            renderCapturedImages();
+        };
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(deleteBtn);
+        container.appendChild(wrapper);
+    });
+}
 </script>
+
+
 @endsection
