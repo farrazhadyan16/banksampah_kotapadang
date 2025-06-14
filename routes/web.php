@@ -62,10 +62,7 @@ Route::get('/nota/{id}', [NotaController::class, 'show'])->name('nota.show');
 Route::get('/orderlist', [OrderListController::class, 'showOrderList'])->name('orderlist');
 Route::put('/orderlist/{id}/status', [OrderListController::class, 'updateStatus'])->name('orderlist.updateStatus');
 
-Route::get('/setoran', function () {
-    return view('setoran');
-})->name('setoran');
-
+Route::get('/setoran', [SetoranController::class, 'create'])->name('setoran');
 
 Route::post('/setoran/konfirmasi', [SetoranController::class, 'konfirmasiSetor'])->name('setoran.konfirmasi');
 Route::post('/setoran/simpan', [SetoranController::class, 'simpan'])->name('setoran.simpan');

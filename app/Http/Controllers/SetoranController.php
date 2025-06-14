@@ -97,6 +97,24 @@ class SetoranController extends Controller
         return redirect()->back()->with('success', 'Setoran berhasil dikonfirmasi.');
     }
 
+public function create()
+{
+    // Ambil data harga sampah dari database (pastikan nama kolom sesuai)
+    $hargaData = DB::table('sampah')->pluck('harga_satuan', 'jenis_sampah');
+
+    $hargaSampah = [
+        'botol_plastik' => $hargaData['Botol Plastik'] ?? 0,
+        'kaleng' => $hargaData['Kaleng'] ?? 0,
+        'ban_karet' => $hargaData['Ban Karet'] ?? 0,
+        'botol_kaca' => $hargaData['Botol Kaca'] ?? 0,
+        'galon' => $hargaData['Galon'] ?? 0,
+    ];
+
+    return view('setoran', compact('hargaSampah'));
+}
+
+
+
     public function konfirmasiSetor(Request $request)
     {
         $harga = DB::table('sampah')->pluck('harga_satuan', 'jenis_sampah');
