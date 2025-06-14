@@ -119,9 +119,7 @@ class SetoranController extends Controller
         $hargaSampah = [
             "botol_plastik" => $hargaData["Botol Plastik"] ?? 0,
             "kaleng" => $hargaData["Kaleng"] ?? 0,
-            "ban_karet" => $hargaData["Ban Karet"] ?? 0,
             "botol_kaca" => $hargaData["Botol Kaca"] ?? 0,
-            "galon" => $hargaData["Galon"] ?? 0,
         ];
 
         return view("setoran", compact("hargaSampah"));
@@ -137,25 +135,18 @@ class SetoranController extends Controller
                 0
             ),
             "jumlah_kaleng" => (int) $request->input("jumlah_kaleng", 0),
-            "jumlah_ban_karet" => (int) $request->input("jumlah_ban_karet", 0),
             "jumlah_botol_kaca" => (int) $request->input(
                 "jumlah_botol_kaca",
                 0
             ),
-            "jumlah_galon" => (int) $request->input("jumlah_galon", 0),
 
             "harga_botol_plastik" => $harga["Botol Plastik"] ?? 0,
             "harga_kaleng" => $harga["Kaleng"] ?? 0,
-            "harga_ban_karet" => $harga["Ban Karet"] ?? 0,
             "harga_botol_kaca" => $harga["Botol Kaca"] ?? 0,
-            "harga_galon" => $harga["Galon"] ?? 0,
         ];
 
         $total = 0;
-        foreach (
-            ["botol_plastik", "kaleng", "ban_karet", "botol_kaca", "galon"]
-            as $jenis
-        ) {
+        foreach (["botol_plastik", "kaleng", "botol_kaca"] as $jenis) {
             $jumlah = $data["jumlah_{$jenis}"];
             $hargaSatuan = $data["harga_{$jenis}"];
             $total += $jumlah * $hargaSatuan;
@@ -201,9 +192,7 @@ class SetoranController extends Controller
             $jenisSampah = [
                 "Botol Plastik" => $data["jumlah_botol_plastik"],
                 "Kaleng" => $data["jumlah_kaleng"],
-                "Ban Karet" => $data["jumlah_ban_karet"],
                 "Botol Kaca" => $data["jumlah_botol_kaca"],
-                "Galon" => $data["jumlah_galon"],
             ];
 
             foreach ($jenisSampah as $jenis => $jumlah) {

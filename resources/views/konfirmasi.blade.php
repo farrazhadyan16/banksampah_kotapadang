@@ -14,9 +14,7 @@
                     $items = [
                         'botol_plastik' => 'Botol Plastik',
                         'kaleng' => 'Kaleng',
-                        'ban_karet' => 'Ban Karet',
                         'botol_kaca' => 'Botol Kaca',
-                        'galon' => 'Galon',
                     ];
                 @endphp
 
