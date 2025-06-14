@@ -30,7 +30,7 @@
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
         <h6 class="m-0 font-weight-bold text-primary">Daftar Order</h6>
-        <form method="GET" class="form-inline" action="{{ route('orderlist') }}">
+        <form method="GET" class="form-inline" action="{{ route('orderlist.show') }}">
             <input type="date" name="tanggal" class="form-control mr-2" value="{{ request('tanggal') }}">
 
             <select name="status" class="form-control mr-1">
@@ -53,7 +53,7 @@
             </select>
 
             <button class="btn btn-primary mr-2">Terapkan</button>
-            <a href="{{ route('orderlist') }}" class="btn btn-danger">Reset</a>
+            <a href="{{ route('orderlist.show') }}" class="btn btn-danger">Reset</a>
         </form>
     </div>
 

@@ -92,8 +92,8 @@ Route::get("/riwayat", [RiwayatController::class, "show"])->name(
 Route::get("/nota/{id}", [NotaController::class, "show"])->name("nota.show");
 
 //orderlist
-Route::get("/orderlist", [OrderListController::class, "showOrderList"])->name(
-    "orderlist"
+Route::get("/orderlist", [OrderListController::class, "show"])->name(
+    "orderlist.show"
 );
 Route::put("/orderlist/{id}/status", [
     OrderListController::class,
@@ -105,7 +105,7 @@ Route::get("/setoran", [SetoranController::class, "show"])->name("setoran");
 
 Route::post("/setoran/konfirmasi", [
     SetoranController::class,
-    "konfirmasiSetoran",
+    "Setorankonfirmasi",
 ])->name("setoran.konfirmasi");
 
 Route::post("/konfirmasi", [SetoranController::class, "konfirmasi"])->name(

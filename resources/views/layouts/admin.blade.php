@@ -64,8 +64,8 @@
         </li>
 
         <!-- Nav Item - Order List -->
-        <li class="nav-item {{ Nav::isRoute('orderlist') }}">
-            <a class="nav-link" href="{{ route('orderlist') }}">
+        <li class="nav-item {{ Nav::isRoute('orderlist.show') }}">
+            <a class="nav-link" href="{{ route('orderlist.show') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
                 <span>{{ __('Order List') }}</span>
             </a>

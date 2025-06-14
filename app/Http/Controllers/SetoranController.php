@@ -29,7 +29,7 @@ class SetoranController extends Controller // {
         return view("setoran", compact("hargaSampah"));
     }
 
-    public function konfirmasiSetoran(Request $request)
+    public function Setorankonfirmasi(Request $request)
     {
         $harga = DB::table("sampah")->pluck("harga_satuan", "jenis_sampah");
 
