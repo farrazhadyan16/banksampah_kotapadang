@@ -167,7 +167,6 @@ if (result.detected && result.detected.length > 0) {
     updateSubtotal();
     renderSummary();
 
-
     // Update daftar di bawah kamera
     const detectedList = document.getElementById('detectedList');
     detectedList.innerHTML = '';
