@@ -14,6 +14,7 @@
                     <div class="text-center mt-3">
                         <button type="button" id="captureBtn" class="btn btn-secondary">Ambil Gambar</button>
                     </div>
+                    <div class="mt-3 text-start" id="summaryDetected"></div>
                 </div>
 
                 <p id="detectedLabel" class="mt-3 text-success fw-bold"></p>
@@ -144,7 +145,7 @@ document.getElementById('captureBtn').addEventListener('click', async () => {
         }
 
 if (result.detected && result.detected.length > 0) {
-    document.getElementById('detectedLabel').innerText = "Terdeteksi: " + result.detected.join(', ');
+    // document.getElementById('detectedLabel').innerText = "Terdeteksi: " + result.detected.join(', ');
 
     const countMap = result.detected.reduce((acc, item) => {
         const key = item.toLowerCase().replace(/\s+/g, '_');
@@ -152,23 +153,37 @@ if (result.detected && result.detected.length > 0) {
         return acc;
     }, {});
 
-    // Perbarui nilai input dan counter
     Object.entries(countMap).forEach(([name, count]) => {
-    detectedCounter[name] = (detectedCounter[name] || 0) + count;
+        detectedCounter[name] = (detectedCounter[name] || 0) + count;
 
-    const input = document.querySelector(`input[name='jumlah_${name}']`);
-    if (input) {
-        const current = parseInt(input.value || '0');
-        input.value = current + count;
-    }
-});
+        const input = document.querySelector(`input[name='jumlah_${name}']`);
+        if (input) {
+            const current = parseInt(input.value || '0');
+            input.value = current + count;
+        }
+    });
 
-// Tambahkan ini setelah loop selesai
-updateSubtotal();
+    // Update subtotal
+    updateSubtotal();
+    renderSummary();
+
+
+    // Update daftar di bawah kamera
+    const detectedList = document.getElementById('detectedList');
+    detectedList.innerHTML = '';
+    Object.entries(countMap).forEach(([name, count]) => {
+        const label = name.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const item = document.createElement('p');
+        item.className = 'mb-1 small';
+        item.innerHTML = `<strong>${label}:</strong> ${count} terdeteksi`;
+        detectedList.appendChild(item);
+    });
 
 } else {
-    document.getElementById('detectedLabel').innerText = "Tidak ada sampah terdeteksi.";
+    // document.getElementById('detectedLabel').innerText = "Tidak ada sampah terdeteksi.";
+    document.getElementById('detectedList').innerHTML = '';
 }
+
 
 
     } catch (err) {
@@ -182,12 +197,13 @@ function renderCapturedImages() {
 
     capturedImages.forEach((imageData, index) => {
         const wrapper = document.createElement('div');
-        wrapper.className = 'position-relative mb-3';
+        wrapper.className = 'border rounded p-3 mb-3 bg-light shadow-sm';
 
         const img = new Image();
         img.src = imageData.src;
-        img.className = 'img-fluid rounded shadow-sm';
-        img.style.maxWidth = '600px';
+        img.className = 'img-fluid rounded';
+        img.style.maxWidth = '100%';
+        img.style.border = '3px solid #198754'; // hijau border
 
         const deleteBtn = document.createElement('button');
         deleteBtn.className = 'btn btn-danger btn-sm position-absolute';
@@ -207,10 +223,34 @@ function renderCapturedImages() {
             capturedImages.splice(index, 1);
             renderCapturedImages();
             updateSubtotal();
+            renderSummary();
         };
 
-        wrapper.appendChild(img);
-        wrapper.appendChild(deleteBtn);
+        // Container tombol hapus
+        const btnWrapper = document.createElement('div');
+        btnWrapper.className = 'position-relative';
+        btnWrapper.appendChild(img);
+        btnWrapper.appendChild(deleteBtn);
+
+        // List jenis sampah yang terdeteksi di gambar ini
+        const summary = document.createElement('div');
+        summary.className = 'mt-2 text-start';
+
+        const countPerType = imageData.detected.reduce((acc, item) => {
+            acc[item] = (acc[item] || 0) + 1;
+            return acc;
+        }, {});
+
+        Object.entries(countPerType).forEach(([jenis, jumlah]) => {
+            const jenisLabel = jenis.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            const p = document.createElement('p');
+            p.className = 'mb-0 small';
+            p.innerHTML = `<strong>${jenisLabel}:</strong> ${jumlah} terdeteksi`;
+            summary.appendChild(p);
+        });
+
+        wrapper.appendChild(btnWrapper);
+        wrapper.appendChild(summary);
         container.appendChild(wrapper);
     });
 }
@@ -234,6 +274,25 @@ function updateSubtotal() {
     document.getElementById('totalSemua').value = 'Rp. ' + total.toLocaleString('id-ID');
     document.getElementById('totalHidden').value = total;
 }
+
+function renderSummary() {
+    const summaryDiv = document.getElementById('summaryDetected');
+    summaryDiv.innerHTML = '<h6 class="fw-bold">Total Sampah Terdeteksi:</h6>';
+
+    const totalList = Object.entries(detectedCounter)
+        .filter(([_, jumlah]) => jumlah > 0)
+        .map(([key, jumlah]) => {
+            const label = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return `<p class="mb-1">${label}: <strong>${jumlah}</strong> kali</p>`;
+        });
+
+    if (totalList.length > 0) {
+        summaryDiv.innerHTML += totalList.join('');
+    } else {
+        summaryDiv.innerHTML += `<p class="text-muted">Belum ada sampah yang terdeteksi.</p>`;
+    }
+}
+
 </script>
 
 
