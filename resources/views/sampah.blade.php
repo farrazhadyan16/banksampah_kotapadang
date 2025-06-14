@@ -56,15 +56,6 @@
                                     <i class="fas fa-edit"></i>
                                 </button>
 
-                                {{-- Delete Form --}}
-                                {{-- <form action="{{ route('sampah.destroy', $sampah->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus sampah ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form> --}}
-
                                 {{-- Edit Modal --}}
                                 <div class="modal fade" id="editModal{{ $sampah->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $sampah->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">

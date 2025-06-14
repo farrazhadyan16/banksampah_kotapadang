@@ -7,16 +7,11 @@ use App\Models\Sampah;
 
 class SampahController extends Controller
 {
-    public function index()
+    public function show()
     {
         $listsampah = Sampah::all();
-        return view("sampah.index", compact("listsampah"));
+        return view("sampah", compact("listsampah"));
     }
-    //     public function edit($id)
-    // {
-    //     $sampah = Sampah::findOrFail($id);
-    //     return view('admin.edit', compact('sampah'));
-    // }
 
     public function update(Request $request, $id)
     {
@@ -41,7 +36,7 @@ class SampahController extends Controller
         $sampah = Sampah::findOrFail($id);
         $sampah->delete();
         return redirect()
-            ->route("sampah.index")
+            ->route("sampah.show")
             ->with("success", "Data berhasil dihapus.");
     }
 }

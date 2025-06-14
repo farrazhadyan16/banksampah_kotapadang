@@ -56,8 +56,8 @@
         </div>
 
         <!-- Nav Item - Sampah -->
-        <li class="nav-item {{ Nav::isRoute('sampah.index') }}">
-            <a class="nav-link" href="{{ route('sampah.index') }}">
+        <li class="nav-item {{ Nav::isRoute('sampah.show') }}">
+            <a class="nav-link" href="{{ route('sampah.show') }}">
                 <i class="fas fa-fw fa-user"></i>
                 <span>{{ __('Sampah') }}</span>
             </a>
@@ -80,16 +80,16 @@
         </li>
 
         <!-- Nav Item - Tarik Saldo -->
-        <li class="nav-item {{ Nav::isRoute('tarik.index') }}">
-            <a class="nav-link" href="{{ route('tarik.index') }}">
+        <li class="nav-item {{ Nav::isRoute('tarik.show') }}">
+            <a class="nav-link" href="{{ route('tarik.show') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
                 <span>{{ __('Tarik Saldo') }}</span>
             </a>
         </li>
 
         <!-- Nav Item - Riwayat -->
-        <li class="nav-item {{ Nav::isRoute('riwayat.index') }}">
-            <a class="nav-link" href="{{ route('riwayat.index') }}">
+        <li class="nav-item {{ Nav::isRoute('riwayat.show') }}">
+            <a class="nav-link" href="{{ route('riwayat.show') }}">
                 <i class="fas fa-fw fa-hands-helping"></i>
                 <span>{{ __('Riwayat') }}</span>
             </a>

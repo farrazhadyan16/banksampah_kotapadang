@@ -7,7 +7,7 @@
             <h2 class="fw-bold">Konfirmasi Setoran</h2>
         </div>
 
-        <form action="{{ route('setoran.konfirmasi') }}" method="POST">
+        <form action="{{ route('final.konfirmasi') }}" method="POST">
             @csrf
             <div class="row g-3">
                 @php

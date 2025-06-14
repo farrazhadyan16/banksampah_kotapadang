@@ -2,7 +2,7 @@
 
 @section('main-content')
 <div class="container mt-4">
-    <form method="POST" action="{{ route('setor.konfirmasi') }}">
+    <form method="POST" action="{{ route('setoran.konfirmasi') }}">
         @csrf
         <div class="card border-0 shadow-sm mb-4">
             <div class="card-body text-center">

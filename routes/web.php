@@ -27,9 +27,9 @@ Route::get("/about", function () {
     return view("about");
 })->name("about");
 
-Route::get("/sampah", [SampahController::class, "index"])->name("sampah.index");
-/* Route::get('/sampah/edit/{id}', [SampahController::class, 'edit'])->name('sampah.edit');
- Route::put('/sampah/update/{id}', [SampahController::class, 'update'])->name('sampah.update'); */
+//sampah
+Route::get("/sampah", [SampahController::class, "show"])->name("sampah.show");
+
 Route::delete("/sampah/{id}", [SampahController::class, "destroy"])->name(
     "sampah.destroy"
 );
@@ -37,6 +37,7 @@ Route::put("/sampah/{id}", [SampahController::class, "update"])->name(
     "sampah.update"
 );
 
+//nasabah
 Route::get("/user-nasabah", [UserController::class, "showNasabah"])->name(
     "user.nasabah"
 );
@@ -46,17 +47,17 @@ Route::put("/user/{id}", [UserController::class, "update"])->name(
 Route::delete("/user/{id}", [UserController::class, "destroy"])->name(
     "user.destroy"
 );
+//admin
+Route::get("/admin", [UserController::class, "showAdmin"])->name("admin.show");
 Route::get("/user-admin", [UserController::class, "showAdmin"])->name(
     "user.admin"
 );
-
 Route::get("/admin/create", [UserController::class, "createAdmin"])->name(
     "admin.create"
 );
 Route::post("/admin/store", [UserController::class, "store"])->name(
     "admin.store"
 );
-Route::get("/admin", [UserController::class, "showAdmin"])->name("admin.show");
 
 Route::middleware(["auth"])->group(function () {
     // Tampilkan form create nasabah
@@ -74,22 +75,23 @@ Route::middleware(["auth"])->group(function () {
     );
 });
 
-Route::get("/tarik-saldo", [TarikSaldoController::class, "index"])->name(
-    "tarik.index"
+//tarik
+Route::get("/tarik-saldo", [TarikSaldoController::class, "show"])->name(
+    "tarik.show"
 );
 Route::post("/tarik-saldo", [TarikSaldoController::class, "store"])->name(
     "tarik.store"
 );
-Route::get("/nota-tarik/{id}", [TarikSaldoController::class, "nota"])->name(
-    "tarik.nota"
+
+//riwayat
+Route::get("/riwayat", [RiwayatController::class, "show"])->name(
+    "riwayat.show"
 );
 
-Route::get("/riwayat", [RiwayatController::class, "index"])->name(
-    "riwayat.index"
-);
-
+//nota
 Route::get("/nota/{id}", [NotaController::class, "show"])->name("nota.show");
 
+//orderlist
 Route::get("/orderlist", [OrderListController::class, "showOrderList"])->name(
     "orderlist"
 );
@@ -98,30 +100,14 @@ Route::put("/orderlist/{id}/status", [
     "updateStatus",
 ])->name("orderlist.updateStatus");
 
-Route::get("/setoran", [SetoranController::class, "create"])->name("setoran");
+//setoran
+Route::get("/setoran", [SetoranController::class, "show"])->name("setoran");
 
 Route::post("/setoran/konfirmasi", [
     SetoranController::class,
-    "konfirmasiSetor",
+    "konfirmasiSetoran",
 ])->name("setoran.konfirmasi");
-Route::post("/setoran/simpan", [SetoranController::class, "simpan"])->name(
-    "setoran.simpan"
-);
-
-Route::post("/setor/konfirmasi", [
-    SetoranController::class,
-    "konfirmasiSetor",
-])->name("setor.konfirmasi");
 
 Route::post("/konfirmasi", [SetoranController::class, "konfirmasi"])->name(
-    "setoran.konfirmasi"
+    "final.konfirmasi"
 );
-// web.php
-Route::post("/simpan", [SetoranController::class, "simpan"])->name(
-    "setoran.simpan"
-);
-
-Route::post("/setoran/konfirmasi", [
-    SetoranController::class,
-    "konfirmasiSetor",
-])->name("setor.konfirmasi");

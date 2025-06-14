@@ -75,7 +75,24 @@
 
             <div class="mt-4">
                 <a href="#" onclick="window.print()" class="btn btn-outline-primary me-2">Bagikan</a>
-                <a href="{{ route('tarik.index') }}" class="btn btn-primary">OK</a>
+                
+                @php
+                    switch($riwayat->jenis_transaksi) {
+                        case 'setoran':
+                            $redirectUrl = route('setoran');
+                            break;
+                        case 'tarik_saldo':
+                            $redirectUrl = route('tarik.show');
+                            break;
+                        case 'riwayat':
+                        default:
+                            $redirectUrl = route('riwayat.show');
+                            break;
+                    }
+                @endphp
+
+                <a href="{{ $redirectUrl }}" class="btn btn-primary">OK</a>
+
             </div>
         </div>
     </div>
