@@ -6,6 +6,29 @@
 
     @php $userRole = auth()->user()->role ?? ''; @endphp
 
+    {{-- ✅ Tampilan untuk NASABAH --}}
+    @if ($userRole === 'nasabah')
+        {{-- Saldo --}}
+        <div class="alert alert-success">
+            <strong>Saldo Anda:</strong> Rp {{ number_format($saldoUser, 0, ',', '.') }}
+        </div>
+
+        {{-- Grafik Setoran Nasabah per Jenis Sampah --}}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card shadow mb-4">
+                    <div class="card-header">
+                        <h6 class="m-0 font-weight-bold text-primary">Setoran Anda per Jenis Sampah (6 Bulan)</h6>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="chartSetoranUser"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    {{-- ✅ Tampilan untuk ADMIN/SUPER ADMIN --}}
     @if (in_array($userRole, ['admin', 'super_admin']))
         {{-- Rangkuman Ringkas --}}
         <div class="row">
@@ -19,20 +42,20 @@
             @endphp
 
             @foreach ($cards as $card)
-            <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-{{ $card['color'] }} shadow h-100 py-2">
-                    <div class="card-body">
-                        <div class="text-xs font-weight-bold text-{{ $card['color'] }} text-uppercase mb-1">
-                            {{ $card['title'] }}
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card border-left-{{ $card['color'] }} shadow h-100 py-2">
+                        <div class="card-body">
+                            <div class="text-xs font-weight-bold text-{{ $card['color'] }} text-uppercase mb-1">
+                                {{ $card['title'] }}
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $card['value'] }}</div>
                         </div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $card['value'] }}</div>
                     </div>
                 </div>
-            </div>
             @endforeach
         </div>
 
-        {{-- Transaksi Terbaru --}}
+        {{-- Transaksi Terbaru & Distribusi Sampah --}}
         <div class="row">
             <div class="col-lg-6">
                 <div class="card shadow mb-4">
@@ -43,8 +66,7 @@
                         @forelse ($recentRiwayat as $item)
                             <div class="mb-2">
                                 <strong>{{ strtoupper($item->jenis_transaksi) }}</strong> oleh 
-                                <span class="text-info">{{ $item->nasabah->name ?? 'Tidak diketahui' }}</span>
-                                <br>
+                                <span class="text-info">{{ $item->nasabah->name ?? 'Tidak diketahui' }}</span><br>
                                 <small class="text-muted">{{ $item->created_at->format('d M Y H:i') }}</small>
                                 <hr class="my-2">
                             </div>
@@ -55,7 +77,6 @@
                 </div>
             </div>
 
-            {{-- Distribusi Sampah --}}
             <div class="col-lg-6">
                 <div class="card shadow mb-4">
                     <div class="card-header">
@@ -69,7 +90,7 @@
         </div>
     @endif
 
-    {{-- Grafik Transaksi Bulanan --}}
+    {{-- ✅ Grafik Transaksi Bulanan --}}
     <div class="row">
         <div class="col-lg-12">
             <div class="card shadow mb-4">
@@ -83,7 +104,7 @@
         </div>
     </div>
 
-    {{-- Grafik Bulanan per Jenis Sampah --}}
+    {{-- ✅ Grafik Jenis Sampah per Bulan --}}
     <div class="row">
         <div class="col-lg-12">
             <div class="card shadow mb-4">
@@ -98,11 +119,10 @@
     </div>
 </div>
 
-{{-- Chart.js --}}
-{{-- Chart.js --}}
+{{-- ✅ Script Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Grafik Bulanan per Jenis Sampah
+    // Grafik Jenis Sampah Umum
     new Chart(document.getElementById('chartJenis'), {
         type: 'line',
         data: {
@@ -117,7 +137,7 @@
         }
     });
 
-    // Grafik Transaksi Bulanan (DIPINDAH KE LUAR IF)
+    // Grafik Transaksi
     new Chart(document.getElementById('transaksiChart'), {
         type: 'line',
         data: {
@@ -138,10 +158,33 @@
                     fill: false
                 }
             ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            }
         }
     });
 
-    // Pie Chart hanya untuk admin dan super_admin
+    // Grafik Setoran User (nasabah)
+    @if ($userRole === 'nasabah')
+    new Chart(document.getElementById('chartSetoranUser'), {
+        type: 'line',
+        data: {
+            labels: {!! json_encode($chartSetoranUser['labels']) !!},
+            datasets: {!! json_encode($chartSetoranUser['datasets']) !!}
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' }
+            }
+        }
+    });
+    @endif
+
+    // Pie Chart Distribusi Sampah
     @if (in_array($userRole, ['admin', 'super_admin']))
     new Chart(document.getElementById('sampahPie'), {
         type: 'pie',
@@ -151,9 +194,14 @@
                 data: {!! json_encode($chartSampahPie['data']) !!},
                 backgroundColor: ['#36b9cc', '#f6c23e', '#e74a3b', '#4e73df', '#1cc88a'],
             }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'right' }
+            }
         }
     });
     @endif
 </script>
-
 @endsection

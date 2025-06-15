@@ -8,6 +8,7 @@ use App\Models\Sampah;
 use App\Models\Setoran;
 use App\Models\TarikSaldo;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -18,26 +19,81 @@ class HomeController extends Controller
 
     public function index()
     {
-        // Total pengguna berdasarkan role
+        $user = Auth::user();
+        $userId = $user->id;
+        $userRole = $user->role;
+
+        // Ambil saldo user
+        $saldoUser = $user->saldo ?? 0;
+
+        // Total setoran user per jenis sampah per bulan
+        $chartSetoranUser = [
+            "labels" => [],
+            "datasets" => [],
+        ];
+
+        if ($userRole === "nasabah") {
+            $jenisSampah = Sampah::pluck("jenis_sampah", "id")->toArray();
+            $warnaSampah = [
+                "#36b9cc",
+                "#f6c23e",
+                "#e74a3b",
+                "#4e73df",
+                "#1cc88a",
+                "#858796",
+            ];
+            $warnaIndex = 0;
+
+            foreach ($jenisSampah as $idSampah => $namaSampah) {
+                $dataPerBulan = [];
+
+                for ($i = 5; $i >= 0; $i--) {
+                    $bulan = now()->subMonths($i);
+                    $label = $bulan->format("M Y");
+
+                    if (!in_array($label, $chartSetoranUser["labels"])) {
+                        $chartSetoranUser["labels"][] = $label;
+                    }
+
+                    $jumlah = DB::table("setoran_detail")
+                        ->join(
+                            "setoran",
+                            "setoran_detail.id_setoran",
+                            "=",
+                            "setoran.id"
+                        )
+                        ->where("setoran.id_nasabah", $userId)
+                        ->where("setoran_detail.id_sampah", $idSampah)
+                        ->whereMonth("setoran_detail.created_at", $bulan->month)
+                        ->whereYear("setoran_detail.created_at", $bulan->year)
+                        ->sum("setoran_detail.jumlah_sampah");
+
+                    $dataPerBulan[] = $jumlah;
+                }
+
+                $chartSetoranUser["datasets"][] = [
+                    "label" => $namaSampah,
+                    "data" => $dataPerBulan,
+                    "borderColor" =>
+                        $warnaSampah[$warnaIndex++ % count($warnaSampah)],
+                    "fill" => false,
+                ];
+            }
+        }
+
+        // Data umum (admin/super_admin)
         $totalNasabah = User::where("role", "nasabah")->count();
         $totalSetoranProses = Setoran::where("status", "processing")->count();
-
-        // Total setoran dan tarik saldo (jumlah transaksi)
         $totalSetoran = Riwayat::where("jenis_transaksi", "setoran")->count();
         $totalTarik = Riwayat::where("jenis_transaksi", "tarik_saldo")->count();
 
-        // Daftar sampah dan stoknya
         $sampahList = Sampah::select("jenis_sampah", "jumlah")->get();
 
-        // Data chart - distribusi sampah (pie) dan stok (bar)
         $chartSampahPie = [
             "labels" => $sampahList->pluck("jenis_sampah"),
             "data" => $sampahList->pluck("jumlah"),
         ];
 
-        $chartSampahBar = $chartSampahPie;
-
-        // Transaksi bulanan
         $chartTransaksi = [
             "labels" => [],
             "setoran" => [],
@@ -64,10 +120,8 @@ class HomeController extends Controller
                 ->count();
         }
 
-        // Transaksi terbaru
         $recentRiwayat = Riwayat::with("nasabah")->latest()->take(5)->get();
 
-        // Grafik Bulanan per Jenis Sampah (Contoh: Plastik dan Kaca)
         $bulanLabels = [];
         $jenisSampahList = [
             "Plastik" => "botol_plastik",
@@ -76,12 +130,10 @@ class HomeController extends Controller
         ];
         $dataset = [];
 
-        // Inisialisasi data kosong untuk tiap jenis
         foreach ($jenisSampahList as $label => $keyword) {
             $dataset[$label] = [];
         }
 
-        // Loop per bulan
         for ($i = 5; $i >= 0; $i--) {
             $bulan = now()->subMonths($i);
             $bulanLabels[] = $bulan->translatedFormat("F Y");
@@ -108,7 +160,6 @@ class HomeController extends Controller
             "datasets" => [],
         ];
 
-        // Warna berbeda untuk tiap jenis
         $warna = [
             "Plastik" => "#36b9cc",
             "Kaca" => "#f6c23e",
@@ -124,7 +175,6 @@ class HomeController extends Controller
             ];
         }
 
-        // Return view (hanya 1x)
         return view(
             "home",
             compact(
@@ -134,10 +184,11 @@ class HomeController extends Controller
                 "totalTarik",
                 "sampahList",
                 "chartSampahPie",
-                "chartSampahBar",
                 "chartTransaksi",
                 "recentRiwayat",
-                "chartJenis"
+                "chartJenis",
+                "saldoUser",
+                "chartSetoranUser"
             )
         );
     }
