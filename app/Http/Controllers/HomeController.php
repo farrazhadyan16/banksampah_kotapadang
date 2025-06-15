@@ -20,7 +20,7 @@ class HomeController extends Controller
     {
         // Total pengguna berdasarkan role
         $totalNasabah = User::where("role", "nasabah")->count();
-        $totalAdmin = User::where("role", "admin")->count();
+        $totalSetoranProses = Setoran::where("status", "processing")->count();
 
         // Total setoran dan tarik saldo (jumlah transaksi)
         $totalSetoran = Riwayat::where("jenis_transaksi", "setoran")->count();
@@ -129,7 +129,7 @@ class HomeController extends Controller
             "home",
             compact(
                 "totalNasabah",
-                "totalAdmin",
+                "totalSetoranProses",
                 "totalSetoran",
                 "totalTarik",
                 "sampahList",
