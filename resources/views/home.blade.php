@@ -115,11 +115,42 @@
         </div>
     </div>
 
+    {{-- Line Chart: Transaksi Bulanan per Jenis Sampah --}}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow mb-4">
+            <div class="card-header">
+                <h6 class="m-0 font-weight-bold text-primary">Grafik Bulanan per Jenis Sampah</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="chartJenis"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </div>
 
 {{-- Chart.js --}}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
+    // Grafik Bulanan per Jenis Sampah
+new Chart(document.getElementById('chartJenis'), {
+    type: 'line',
+    data: {
+        labels: {!! json_encode($chartJenis['labels']) !!},
+        datasets: {!! json_encode($chartJenis['datasets']) !!}
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top' },
+        }
+    }
+});
+
     // Pie Chart
     new Chart(document.getElementById('sampahPie'), {
         type: 'pie',

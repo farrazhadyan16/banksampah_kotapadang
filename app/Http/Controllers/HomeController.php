@@ -7,6 +7,7 @@ use App\Models\Riwayat;
 use App\Models\Sampah;
 use App\Models\Setoran;
 use App\Models\TarikSaldo;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -34,7 +35,7 @@ class HomeController extends Controller
             "data" => $sampahList->pluck("jumlah"),
         ];
 
-        $chartSampahBar = $chartSampahPie; // sama saja datanya
+        $chartSampahBar = $chartSampahPie;
 
         // Transaksi bulanan
         $chartTransaksi = [
@@ -63,9 +64,67 @@ class HomeController extends Controller
                 ->count();
         }
 
-        // Transaksi terbaru (limit 5)
+        // Transaksi terbaru
         $recentRiwayat = Riwayat::with("nasabah")->latest()->take(5)->get();
 
+        // Grafik Bulanan per Jenis Sampah (Contoh: Plastik dan Kaca)
+        $bulanLabels = [];
+        $jenisSampahList = [
+            "Plastik" => "botol_plastik",
+            "Kaca" => "botol_kaca",
+            "Kaleng" => "kaleng",
+        ];
+        $dataset = [];
+
+        // Inisialisasi data kosong untuk tiap jenis
+        foreach ($jenisSampahList as $label => $keyword) {
+            $dataset[$label] = [];
+        }
+
+        // Loop per bulan
+        for ($i = 5; $i >= 0; $i--) {
+            $bulan = now()->subMonths($i);
+            $bulanLabels[] = $bulan->translatedFormat("F Y");
+
+            foreach ($jenisSampahList as $label => $keyword) {
+                $jumlah = DB::table("setoran_detail")
+                    ->join(
+                        "sampah",
+                        "setoran_detail.id_sampah",
+                        "=",
+                        "sampah.id"
+                    )
+                    ->where("sampah.jenis_sampah", "like", "%$keyword%")
+                    ->whereMonth("setoran_detail.created_at", $bulan->month)
+                    ->whereYear("setoran_detail.created_at", $bulan->year)
+                    ->sum("setoran_detail.jumlah_sampah");
+
+                $dataset[$label][] = $jumlah;
+            }
+        }
+
+        $chartJenis = [
+            "labels" => $bulanLabels,
+            "datasets" => [],
+        ];
+
+        // Warna berbeda untuk tiap jenis
+        $warna = [
+            "Plastik" => "#36b9cc",
+            "Kaca" => "#f6c23e",
+            "Kaleng" => "#e74a3b",
+        ];
+
+        foreach ($dataset as $label => $data) {
+            $chartJenis["datasets"][] = [
+                "label" => $label,
+                "data" => $data,
+                "borderColor" => $warna[$label] ?? "#000",
+                "fill" => false,
+            ];
+        }
+
+        // Return view (hanya 1x)
         return view(
             "home",
             compact(
@@ -77,7 +136,8 @@ class HomeController extends Controller
                 "chartSampahPie",
                 "chartSampahBar",
                 "chartTransaksi",
-                "recentRiwayat"
+                "recentRiwayat",
+                "chartJenis"
             )
         );
     }
