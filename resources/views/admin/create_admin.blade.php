@@ -36,6 +36,7 @@
     <div class="card-body">
         <form action="{{ route('admin.store') }}" method="POST">
             @csrf
+
             <div class="form-group">
                 <label>Nama</label>
                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
@@ -61,9 +62,12 @@
                 <input type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" required>
             </div>
 
-            <div class="form-group">
+            {{-- Password + Toggle --}}
+            <div class="form-group position-relative">
                 <label>Password</label>
-                <input type="password" name="password" class="form-control" required minlength="6">
+                <input type="password" name="password" id="password" class="form-control" required minlength="6">
+                <span toggle="#password" class="fa fa-fw fa-eye toggle-password"
+                      style="position: absolute; top: 38px; right: 15px; cursor: pointer;"></span>
             </div>
 
             <input type="hidden" name="role" value="admin">
@@ -73,6 +77,24 @@
         </form>
     </div>
 </div>
+
+{{-- Font Awesome (jika belum dipasang di layout) --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+{{-- Toggle Show/Hide Password --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.querySelector(".toggle-password");
+        const passwordField = document.querySelector(toggle.getAttribute("toggle"));
+
+        toggle.addEventListener("click", function () {
+            const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+            passwordField.setAttribute("type", type);
+            this.classList.toggle("fa-eye");
+            this.classList.toggle("fa-eye-slash");
+        });
+    });
+</script>
 
 @endif
 

@@ -86,26 +86,31 @@
                                 </div>
                             </div>
 
+                            <!-- Password Row -->
                             <div class="row">
                                 <div class="col-lg-4">
-                                    <div class="form-group focused">
+                                    <div class="form-group focused position-relative">
                                         <label class="form-control-label" for="current_password">Current password</label>
                                         <input type="password" id="current_password" class="form-control" name="current_password" placeholder="Current password">
+                                        <span toggle="#current_password" class="fa fa-fw fa-eye toggle-password" style="position: absolute; top: 36px; right: 15px; cursor: pointer;"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="form-group focused">
+                                    <div class="form-group focused position-relative">
                                         <label class="form-control-label" for="new_password">New password</label>
                                         <input type="password" id="new_password" class="form-control" name="new_password" placeholder="New password">
+                                        <span toggle="#new_password" class="fa fa-fw fa-eye toggle-password" style="position: absolute; top: 36px; right: 15px; cursor: pointer;"></span>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="form-group focused">
+                                    <div class="form-group focused position-relative">
                                         <label class="form-control-label" for="confirm_password">Confirm password</label>
                                         <input type="password" id="confirm_password" class="form-control" name="password_confirmation" placeholder="Confirm password">
+                                        <span toggle="#confirm_password" class="fa fa-fw fa-eye toggle-password" style="position: absolute; top: 36px; right: 15px; cursor: pointer;"></span>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <!-- Button -->
@@ -125,5 +130,25 @@
         </div>
 
     </div>
+{{-- Font Awesome (jika belum ditambahkan di layout) --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+{{-- Toggle Show/Hide Password --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggles = document.querySelectorAll(".toggle-password");
+
+        toggles.forEach(toggle => {
+            const target = document.querySelector(toggle.getAttribute("toggle"));
+
+            toggle.addEventListener("click", function () {
+                const type = target.getAttribute("type") === "password" ? "text" : "password";
+                target.setAttribute("type", type);
+                toggle.classList.toggle("fa-eye");
+                toggle.classList.toggle("fa-eye-slash");
+            });
+        });
+    });
+</script>
 
 @endsection

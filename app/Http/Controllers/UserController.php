@@ -78,7 +78,7 @@ class UserController extends Controller
         // Redirect sesuai role
         if ($validated["role"] === "nasabah") {
             return redirect()
-                ->route("nasabah.show")
+                ->route("nasabah.index")
                 ->with("success", "Nasabah baru berhasil ditambahkan!");
         }
 
