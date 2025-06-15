@@ -35,7 +35,6 @@
 @endif
 
 <div class="card shadow mb-4">
-    
     <div class="card-body">
         <form action="{{ route('nasabah.store') }}" method="POST">
             @csrf
@@ -44,7 +43,6 @@
                 <input type="text" name="name" class="form-control" value="{{ old('name') }}" required>
             </div>
 
-            {{-- Optional: Last Name --}}
             <div class="form-group">
                 <label>Nama Belakang</label>
                 <input type="text" name="last_name" class="form-control" value="{{ old('last_name') }}">
@@ -62,17 +60,18 @@
 
             <div class="form-group">
                 <label>Alamat</label>
-                <input type="text" name="alamat" id="alamat" class="form-control" required>
+                <input type="text" name="alamat" class="form-control" value="{{ old('alamat') }}" required>
             </div>
 
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" name="password" class="form-control" required minlength="6">
             </div>
-            <input type="hidden" name="role" value="nasabah">
-            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
-            <a href="{{ route('nasabah.show') }}" class="btn btn-secondary">Batal</a>
 
+            <input type="hidden" name="role" value="nasabah">
+
+            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan</button>
+            <a href="{{ route('nasabah.index') }}" class="btn btn-secondary">Batal</a>
         </form>
     </div>
 </div>

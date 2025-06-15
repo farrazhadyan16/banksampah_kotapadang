@@ -23,10 +23,6 @@ Route::get("/home", "HomeController@index")->name("home");
 Route::get("/profile", "ProfileController@index")->name("profile");
 Route::put("/profile", "ProfileController@update")->name("profile.update");
 
-Route::get("/about", function () {
-    return view("about");
-})->name("about");
-
 //sampah
 Route::get("/sampah", [SampahController::class, "show"])->name("sampah.show");
 
@@ -37,41 +33,36 @@ Route::put("/sampah/{id}", [SampahController::class, "update"])->name(
     "sampah.update"
 );
 
-//nasabah
-Route::get("/user-nasabah", [UserController::class, "showNasabah"])->name(
-    "user.nasabah"
-);
-Route::put("/user/{id}", [UserController::class, "update"])->name(
-    "user.update"
-);
-Route::delete("/user/{id}", [UserController::class, "destroy"])->name(
-    "user.destroy"
-);
-//admin
-Route::get("/admin", [UserController::class, "showAdmin"])->name("admin.show");
-Route::get("/user-admin", [UserController::class, "showAdmin"])->name(
-    "user.admin"
-);
-Route::get("/admin/create", [UserController::class, "createAdmin"])->name(
-    "admin.create"
-);
-Route::post("/admin/store", [UserController::class, "store"])->name(
-    "admin.store"
-);
-
 Route::middleware(["auth"])->group(function () {
-    // Tampilkan form create nasabah
+    // Admin
+    Route::get("/admin", [UserController::class, "adminIndex"])->name(
+        "admin.index"
+    );
+    Route::get("/admin/create", [UserController::class, "adminCreate"])->name(
+        "admin.create"
+    );
+    Route::post("/admin", [UserController::class, "adminStore"])->name(
+        "admin.store"
+    );
+
+    // Nasabah
+    Route::get("/nasabah", [UserController::class, "nasabahIndex"])->name(
+        "nasabah.index"
+    );
     Route::get("/nasabah/create", [
         UserController::class,
-        "createNasabah",
+        "nasabahCreate",
     ])->name("nasabah.create");
-    // Simpan nasabah
-    Route::post("/nasabah", [UserController::class, "store"])->name(
+    Route::post("/nasabah", [UserController::class, "nasabahStore"])->name(
         "nasabah.store"
     );
-    // Halaman index nasabah
-    Route::get("/nasabah", [UserController::class, "showNasabah"])->name(
-        "nasabah.show"
+
+    // Umum (edit/hapus)
+    Route::put("/user/{id}", [UserController::class, "update"])->name(
+        "user.update"
+    );
+    Route::delete("/user/{id}", [UserController::class, "destroy"])->name(
+        "user.destroy"
     );
 });
 

@@ -2,7 +2,7 @@
 
 @section('main-content')
 
-<h1 class="h3 mb-4 text-gray-800">Table User Nasabah</h1>
+<h1 class="h3 mb-4 text-gray-800">Tabel User Nasabah</h1>
 
 {{-- Pesan sukses --}}
 @if (session('success'))
@@ -31,18 +31,14 @@
 
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-    <h6 class="m-0 font-weight-bold text-primary">Data Nasabah</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Data Nasabah</h6>
 
-    @php
-        $userRole = auth()->user()->role ?? '';
-    @endphp
-
-    @if (in_array($userRole, ['admin', 'super_admin']))
-        <a href="{{ route('nasabah.create') }}" class="btn btn-success">
-            <i class="fas fa-plus"></i> Tambah Nasabah
-        </a>
-    @endif
-</div>
+        @if (in_array(auth()->user()->role, ['admin', 'super_admin']))
+            <a href="{{ route('nasabah.create') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Tambah Nasabah
+            </a>
+        @endif
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">
@@ -59,7 +55,7 @@
                 <tbody>
                     @forelse ($listnasabah as $nasabah)
                         <tr>
-                            <td>{{ str_pad($nasabah->id,  '0', STR_PAD_LEFT) }}</td>
+                            <td>{{ $nasabah->id }}</td>
                             <td>{{ $nasabah->name }}</td>
                             <td>{{ $nasabah->email }}</td>
                             <td>{{ $nasabah->no_hp }}</td>
@@ -80,17 +76,15 @@
                                 </form>
 
                                 {{-- Modal Edit --}}
-                                <div class="modal fade" id="editModal{{ $nasabah->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $nasabah->id }}" aria-hidden="true">
+                                <div class="modal fade" id="editModal{{ $nasabah->id }}" tabindex="-1" role="dialog">
                                     <div class="modal-dialog" role="document">
                                         <form action="{{ route('user.update', $nasabah->id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="editModalLabel{{ $nasabah->id }}">Edit Nasabah</h5>
-                                                    <button type="button" class="close" data-dismiss="modal">
-                                                        <span>&times;</span>
-                                                    </button>
+                                                    <h5 class="modal-title">Edit Nasabah</h5>
+                                                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
@@ -103,7 +97,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No HP</label>
-                                                        <input type="number" name="no_hp" class="form-control" value="{{ old('no_hp', $nasabah->no_hp) }}" required>
+                                                        <input type="text" name="no_hp" class="form-control" value="{{ old('no_hp', $nasabah->no_hp) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Alamat</label>

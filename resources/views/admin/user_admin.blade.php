@@ -4,6 +4,7 @@
 
 <h1 class="h3 mb-4 text-gray-800">Table User Admin</h1>
 
+{{-- Pesan sukses --}}
 @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
@@ -13,6 +14,7 @@
     </div>
 @endif
 
+{{-- Pesan error validasi --}}
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Data tidak diperbarui:</strong>
@@ -27,22 +29,20 @@
     </div>
 @endif
 
+@php
+    $userRole = auth()->user()->role ?? '';
+@endphp
+
 <div class="card shadow mb-4">
     <div class="card-header py-3 d-flex justify-content-between align-items-center">
-    <h6 class="m-0 font-weight-bold text-primary">Data Admin</h6>
+        <h6 class="m-0 font-weight-bold text-primary">Data Admin</h6>
 
-    @php
-        $userRole = auth()->user()->role ?? '';
-    @endphp
-
-    @if ($userRole === 'super_admin')
-        <a href="{{ route('admin.create') }}" class="btn btn-success">
-            <i class="fas fa-plus"></i> Tambah Admin
-        </a>
-    @endif
-</div>
-
-
+        @if ($userRole === 'super_admin')
+            <a href="{{ route('admin.create') }}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Tambah Admin
+            </a>
+        @endif
+    </div>
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">
@@ -65,12 +65,12 @@
                             <td>{{ $admin->no_hp }}</td>
                             <td>{{ $admin->alamat }}</td>
                             <td>
-                                <!-- Edit Button -->
+                                {{-- Tombol Edit --}}
                                 <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#editModal{{ $admin->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
 
-                                <!-- Delete Form -->
+                                {{-- Tombol Hapus --}}
                                 <form action="{{ route('user.destroy', $admin->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus admin ini?')">
                                     @csrf
                                     @method('DELETE')
@@ -79,7 +79,7 @@
                                     </button>
                                 </form>
 
-                                <!-- Edit Modal -->
+                                {{-- Modal Edit --}}
                                 <div class="modal fade" id="editModal{{ $admin->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $admin->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <form action="{{ route('user.update', $admin->id) }}" method="POST">
@@ -103,7 +103,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label>No HP</label>
-                                                        <input type="number" name="no_hp" class="form-control" value="{{ old('no_hp', $admin->no_hp) }}" required>
+                                                        <input type="text" name="no_hp" class="form-control" value="{{ old('no_hp', $admin->no_hp) }}" required>
                                                     </div>
                                                     <div class="form-group">
                                                         <label>Alamat</label>
@@ -118,7 +118,6 @@
                                         </form>
                                     </div>
                                 </div>
-
                             </td>
                         </tr>
                     @empty
