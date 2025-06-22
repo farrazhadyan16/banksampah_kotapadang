@@ -1,9 +1,6 @@
 @extends('layouts.admin')
-
 @section('main-content')
-
 <h1 class="h3 mb-4 text-gray-800">Table Sampah</h1>
-
 @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
@@ -12,7 +9,6 @@
         </button>
     </div>
 @endif
-
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Terjadi kesalahan:</strong>
@@ -26,7 +22,6 @@
         </button>
     </div>
 @endif
-
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Sampah</h6>
@@ -55,7 +50,6 @@
                                 <button class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#editModal{{ $sampah->id }}">
                                     <i class="fas fa-edit"></i>
                                 </button>
-
                                 {{-- Edit Modal --}}
                                 <div class="modal fade" id="editModal{{ $sampah->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $sampah->id }}" aria-hidden="true">
                                     <div class="modal-dialog" role="document">
@@ -91,7 +85,6 @@
                                         </form>
                                     </div>
                                 </div>
-
                             </td>
                         </tr>
                     @empty
@@ -104,5 +97,4 @@
         </div>
     </div>
 </div>
-
 @endsection

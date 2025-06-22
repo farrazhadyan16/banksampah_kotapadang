@@ -1,9 +1,6 @@
 @extends('layouts.admin')
-
 @section('main-content')
-
 <h1 class="h3 mb-4 text-gray-800">Riwayat Transaksi</h1>
-
 @if (session('success'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         {{ session('success') }}
@@ -12,7 +9,6 @@
         </button>
     </div>
 @endif
-
 @if ($errors->any())
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>Terjadi kesalahan:</strong>
@@ -26,30 +22,24 @@
         </button>
     </div>
 @endif
-
 <div class="card shadow mb-4">
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">Data Riwayat</h6>
     </div>
     <div class="card-body">
-
         <form method="GET" class="form-inline mb-4">
             <label class="mr-2">Dari</label>
             <input type="date" name="start_date" value="{{ request('start_date') }}" class="form-control mr-3">
-
             <label class="mr-2">Sampai</label>
             <input type="date" name="end_date" value="{{ request('end_date') }}" class="form-control mr-3">
-
             <label class="mr-2">Jenis Transaksi</label>
             <select name="jenis_transaksi" class="form-control mr-3">
                 <option value="">-- Semua --</option>
                 <option value="setor_sampah" {{ request('jenis_transaksi') == 'setor_sampah' ? 'selected' : '' }}>Setor Sampah</option>
                 <option value="tarik_saldo" {{ request('jenis_transaksi') == 'tarik_saldo' ? 'selected' : '' }}>Tarik Saldo</option>
             </select>
-
             <button type="submit" class="btn btn-primary">Filter</button>
         </form>
-
         <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%">
                 <thead>
@@ -93,12 +83,10 @@
                     @endforelse
                 </tbody>
             </table>
-
             <div class="mt-3">
                 {{ $riwayat->withQueryString()->links() }}
             </div>
         </div>
     </div>
 </div>
-
 @endsection

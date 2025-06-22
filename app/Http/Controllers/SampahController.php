@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use App\Models\Sampah;
-
 class SampahController extends Controller
 {
     public function show()
@@ -12,7 +9,6 @@ class SampahController extends Controller
         $listsampah = Sampah::all();
         return view("sampah", compact("listsampah"));
     }
-
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -20,12 +16,10 @@ class SampahController extends Controller
             "harga_satuan" => "required|numeric|min:0",
             "jumlah" => "required|numeric|min:0",
         ]);
-
         $sampah = Sampah::findOrFail($id);
         $sampah->update(
             $request->only("jenis_sampah", "harga_satuan", "jumlah")
         );
-
         return redirect()
             ->back()
             ->with("success", "Data sampah berhasil diperbarui!");

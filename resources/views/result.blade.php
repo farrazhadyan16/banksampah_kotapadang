@@ -1,8 +1,6 @@
 @extends('layouts.admin')
-
 @section('main-content')
     <h1 class="h3 mb-4 text-gray-800">Hasil Pencarian: "{{ $keyword }}"</h1>
-
     <h5>Data Nasabah:</h5>
     <ul>
         @forelse ($nasabah as $n)
@@ -11,7 +9,6 @@
             <li>Tidak ditemukan.</li>
         @endforelse
     </ul>
-
     <h5>Data Sampah:</h5>
     <ul>
         @forelse ($sampah as $s)
@@ -20,7 +17,6 @@
             <li>Tidak ditemukan.</li>
         @endforelse
     </ul>
-
     <h5>Riwayat Transaksi:</h5>
     <ul>
         @forelse ($riwayat as $r)

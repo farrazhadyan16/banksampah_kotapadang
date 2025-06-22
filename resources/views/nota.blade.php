@@ -1,5 +1,4 @@
 @extends('layouts.admin')
-
 @section('main-content')
 <div class="container mt-4">
     <div class="card border-0 shadow-sm">
@@ -24,7 +23,6 @@
                     @endif
                 </p>
                 <hr>
-
                 @php
                     $nominal = 0;
                     if ($riwayat->jenis_transaksi === 'tarik_saldo') {
@@ -33,7 +31,6 @@
                         $nominal = $riwayat->setoran->total_harga ?? 0;
                     }
                 @endphp
-
                 @if($riwayat->jenis_transaksi === 'setoran' && $riwayat->setoran)
                     <h5>Rincian Setoran Sampah</h5>
                     <table class="table table-bordered">
@@ -69,10 +66,8 @@
                         </tbody>
                     </table>
                 @endif
-
                 <p><strong>Nominal:</strong> Rp {{ number_format($nominal, 0, ',', '.') }}</p>
             </div>
-
             <div class="mt-4">
                 <a href="#" onclick="window.print()" class="btn btn-outline-primary me-2">Bagikan</a>
                 
@@ -90,9 +85,7 @@
                             break;
                     }
                 @endphp
-
                 <a href="{{ $redirectUrl }}" class="btn btn-primary">OK</a>
-
             </div>
         </div>
     </div>
