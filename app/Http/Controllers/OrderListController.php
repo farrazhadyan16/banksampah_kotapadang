@@ -2,6 +2,9 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Setoran;
+use App\Models\Sampah;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 class OrderListController extends Controller
 {
     public function show(Request $request)
@@ -29,10 +32,46 @@ class OrderListController extends Controller
         $request->validate([
             "status" => "required|in:Completed,Processing,Rejected",
         ]);
-        $order = Setoran::findOrFail($id);
-        $order->status = $request->status;
-        $order->save();
-        $order->refresh();
+
+        DB::transaction(function () use ($request, $id) {
+            $setoran = Setoran::with(["user", "details.sampah"])->findOrFail(
+                $id
+            );
+            $oldStatus = $setoran->status;
+            $newStatus = $request->status;
+            $user = $setoran->user;
+
+            // Update status
+            $setoran->status = $newStatus;
+            $setoran->save();
+
+            // Jika status berubah ke Completed dan sebelumnya bukan Completed
+            if ($newStatus === "Completed" && $oldStatus !== "Completed") {
+                foreach ($setoran->details as $detail) {
+                    $sampah = $detail->sampah;
+                    $sampah->jumlah += $detail->jumlah_sampah;
+                    $sampah->save();
+                }
+
+                $user->saldo += $setoran->total_harga;
+                $user->save();
+            }
+
+            // Jika status berubah dari Completed ke selain Completed
+            elseif ($oldStatus === "Completed" && $newStatus !== "Completed") {
+                foreach ($setoran->details as $detail) {
+                    $sampah = $detail->sampah;
+                    $sampah->jumlah -= $detail->jumlah_sampah;
+                    $sampah->save();
+                }
+
+                $user->saldo -= $setoran->total_harga;
+                $user->save();
+            }
+
+            // Jika hanya dari Processing ⇄ Rejected, tidak ada perubahan
+        });
+
         return redirect()
             ->route("orderlist.show")
             ->with("success", "Status berhasil diperbarui.");

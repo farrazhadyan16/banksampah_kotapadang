@@ -17,7 +17,14 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'last_name', 'email', 'password','no_hp','alamat','role','saldo',
+        "name",
+        "last_name",
+        "email",
+        "password",
+        "no_hp",
+        "alamat",
+        "role",
+        "saldo",
     ];
 
     /**
@@ -25,9 +32,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+    protected $hidden = ["password", "remember_token"];
 
     /**
      * The attributes that should be cast to native types.
@@ -35,7 +40,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        "email_verified_at" => "datetime",
     ];
 
     /**
@@ -60,7 +65,7 @@ class User extends Authenticatable
      */
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = bcrypt($value);
+        $this->attributes["password"] = bcrypt($value);
     }
 
     /**
@@ -71,8 +76,17 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            "email_verified_at" => "datetime",
+            "password" => "hashed",
         ];
+    }
+
+    public function setoran()
+    {
+        return $this->hasMany(\App\Models\Setoran::class, "id_nasabah");
+    }
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, "id_nasabah");
     }
 }

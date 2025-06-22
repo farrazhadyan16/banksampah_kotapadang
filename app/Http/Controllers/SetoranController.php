@@ -59,75 +59,49 @@ class SetoranController extends Controller // {
     }
     public function konfirmasi(Request $request)
     {
-        $userId = auth()->id();
-        $data = session("data_setoran");
-        if (!$data) {
-            return redirect()
-                ->route("setoran")
-                ->with("error", "Data setoran tidak ditemukan.");
-        }
-        DB::beginTransaction();
-        try {
-            $riwayatId = DB::table("riwayat")->insertGetId([
-                "id_nasabah" => $userId,
-                "jenis_transaksi" => "Setoran",
-                "created_at" => now(),
-                "updated_at" => now(),
+        DB::transaction(function () use ($request) {
+            $user = auth()->user();
+            $total = $request->input("total");
+
+            // Simpan riwayat
+            $riwayat = Riwayat::create([
+                "id_nasabah" => $user->id,
+                "jenis_transaksi" => "setoran",
             ]);
+
+            // Simpan setoran dengan status default Processing
             $setoran = Setoran::create([
-                "id_nasabah" => $userId,
-                "id_riwayat" => $riwayatId,
-                "total_harga" => $data["total"],
+                "id_nasabah" => $user->id,
+                "id_riwayat" => $riwayat->id,
+                "total_harga" => $total,
                 "status" => "Processing",
-                "created_at" => now(),
-                "updated_at" => now(),
             ]);
-            $setoranId = $setoran->id;
-            $sampahMap = DB::table("sampah")->pluck("id", "jenis_sampah");
-            $jenisSampah = [
-                "Botol Plastik" => $data["jumlah_botol_plastik"],
-                "Kaleng" => $data["jumlah_kaleng"],
-                "Ban Karet" => $data["jumlah_ban_karet"],
-                "Botol Kaca" => $data["jumlah_botol_kaca"],
-                "Galon" => $data["jumlah_galon"],
-            ];
-            foreach ($jenisSampah as $jenis => $jumlah) {
-                if ($jumlah <= 0) {
-                    continue;
+
+            // Simpan detail setoran dari form
+            $details = [];
+            foreach (["botol_plastik", "kaleng", "botol_kaca"] as $jenis) {
+                $jumlah = $request->input("jumlah_$jenis");
+                $harga = $request->input("harga_$jenis");
+                if ($jumlah > 0) {
+                    $idSampah = Sampah::where(
+                        "jenis_sampah",
+                        "LIKE",
+                        "%" . ucwords(str_replace("_", " ", $jenis)) . "%"
+                    )->value("id");
+                    $details[] = [
+                        "id_setoran" => $setoran->id,
+                        "id_sampah" => $idSampah,
+                        "jumlah_sampah" => $jumlah,
+                        "harga_satuan" => $harga,
+                        "total_harga" => $jumlah * $harga,
+                    ];
                 }
-                $idSampah = $sampahMap[$jenis] ?? null;
-                if (!$idSampah) {
-                    continue;
-                }
-                $hargaSatuan = DB::table("sampah")
-                    ->where("id", $idSampah)
-                    ->value("harga_satuan");
-                $totalHarga = $jumlah * $hargaSatuan;
-                DB::table("sampah")
-                    ->where("id", $idSampah)
-                    ->increment("jumlah", $jumlah);
-                SetoranDetail::create([
-                    "id_setoran" => $setoranId,
-                    "id_sampah" => $idSampah,
-                    "jumlah_sampah" => $jumlah,
-                    "harga_satuan" => $hargaSatuan,
-                    "total_harga" => $totalHarga,
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ]);
             }
-            DB::table("users")
-                ->where("id", $userId)
-                ->increment("saldo", $data["total"]);
-            DB::commit();
-            session()->forget("data_setoran");
-            return redirect()->route("nota.show", $riwayatId);
-        } catch (\Exception $e) {
-            DB::rollback();
-            return back()->with(
-                "error",
-                "Gagal menyimpan setoran: " . $e->getMessage()
-            );
-        }
+            SetoranDetail::insert($details);
+        });
+
+        return redirect()
+            ->route("setoran")
+            ->with("success", "Setoran berhasil dikonfirmasi.");
     }
 }
