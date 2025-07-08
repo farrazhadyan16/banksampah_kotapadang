@@ -43,7 +43,13 @@ class OrderListController extends Controller
 
             // Update status
             $setoran->status = $newStatus;
+            $setoran->updated_at = now();
             $setoran->save();
+
+            // Update juga tanggal di riwayat
+            $setoran->riwayat()->update([
+                "updated_at" => now(), // Tambahan
+            ]);
 
             // Jika status berubah ke Completed dan sebelumnya bukan Completed
             if ($newStatus === "Completed" && $oldStatus !== "Completed") {

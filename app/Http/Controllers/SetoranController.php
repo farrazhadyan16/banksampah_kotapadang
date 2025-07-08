@@ -75,6 +75,8 @@ class SetoranController extends Controller // {
                 "id_riwayat" => $riwayat->id,
                 "total_harga" => $total,
                 "status" => "Processing",
+                "created_at" => now(),
+                "updated_at" => now(),
             ]);
 
             // Simpan detail setoran dari form
@@ -94,6 +96,8 @@ class SetoranController extends Controller // {
                         "jumlah_sampah" => $jumlah,
                         "harga_satuan" => $harga,
                         "total_harga" => $jumlah * $harga,
+                        "created_at" => now(),
+                        "updated_at" => now(),
                     ];
                 }
             }

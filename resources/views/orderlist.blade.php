@@ -66,7 +66,8 @@
                         <th>No Referensi</th>
                         <th>No Rek</th>
                         <th>Nama</th>
-                        <th>Tanggal</th>
+                        <th>Tanggal Dibuat</th>
+                        <th>Tanggal Diupdate</th> {{-- Tambahan --}}
                         <th>Harga</th>
                         <th>Status</th>
                     </tr>
@@ -78,7 +79,8 @@
                             <td>{{ str_pad($order->id_riwayat, 3, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $order->user->no_rek ?? '-' }}</td>
                             <td>{{ trim(($order->user->name ?? '') . ' ' . ($order->user->last_name ?? '')) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->tanggal)->format('d M Y H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i:s') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($order->updated_at)->format('d M Y H:i:s') }}</td> {{-- Tambahan --}}
                             <td>Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
                             <td>
                                 <form method="POST" action="{{ route('orderlist.updateStatus', $order->id) }}">
@@ -86,8 +88,8 @@
                                     @method('PUT')
                                     <select name="status" onchange="this.form.submit()" class="form-control
                                         {{ $order->status == 'Completed' ? 'bg-success text-white' :
-                                           ($order->status == 'Processing' ? 'bg-primary text-white' :
-                                           ($order->status == 'Rejected' ? 'bg-danger text-white' : 'bg-warning text-dark')) }}">
+                                        ($order->status == 'Processing' ? 'bg-primary text-white' :
+                                        ($order->status == 'Rejected' ? 'bg-danger text-white' : 'bg-warning text-dark')) }}">
                                         <option value="Completed" {{ $order->status == 'Completed' ? 'selected' : '' }}>Completed</option>
                                         <option value="Processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>Processing</option>
                                         <option value="Rejected" {{ $order->status == 'Rejected' ? 'selected' : '' }}>Rejected</option>

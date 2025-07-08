@@ -207,6 +207,14 @@ function renderCapturedImages() {
         container.appendChild(wrapper);
     });
 }
+// Deteksi tombol Enter
+document.addEventListener('keydown', function(event) {
+    // Cek apakah Enter ditekan dan tidak sedang mengetik di input
+    if (event.key === "Enter" && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+        event.preventDefault(); // Mencegah submit jika ada
+        document.getElementById('captureBtn').click(); // Trigger tombol ambil gambar
+    }
+});
 document.querySelectorAll('.jumlah-input').forEach(input => {
     input.addEventListener('input', updateSubtotal);
 });
@@ -238,5 +246,27 @@ function renderSummary() {
         summaryDiv.innerHTML += `<p class="text-muted">Belum ada sampah yang terdeteksi.</p>`;
     }
 }
+// Hapus gambar terakhir dengan tombol Delete
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Delete' && capturedImages.length > 0) {
+        const lastImage = capturedImages[0]; // Gambar terakhir paling atas
+
+        // Kurangi jumlah sampah dari input
+        lastImage.detected.forEach(item => {
+            const input = document.querySelector(`input[name='jumlah_${item}']`);
+            if (input) {
+                const current = parseInt(input.value || '0');
+                input.value = Math.max(0, current - 1);
+                detectedCounter[item] = Math.max(0, (detectedCounter[item] || 1) - 1);
+            }
+        });
+
+        // Hapus dari array dan render ulang
+        capturedImages.shift(); // Hapus gambar paling atas
+        renderCapturedImages();
+        updateSubtotal();
+        renderSummary();
+    }
+});
 </script>
 @endsection
