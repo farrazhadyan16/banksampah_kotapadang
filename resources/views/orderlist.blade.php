@@ -38,6 +38,8 @@
                 <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed</option>
                 <option value="Processing" {{ request('status') == 'Processing' ? 'selected' : '' }}>Processing</option>
                 <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                <option value="Cancelled" {{ request('status') == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+
             </select>
 
             <select name="sort_by" class="form-control mr-1">
@@ -45,6 +47,7 @@
                 <option value="id_riwayat" {{ request('sort_by') == 'id_riwayat' ? 'selected' : '' }}>No Referensi</option>
                 <option value="id_nasabah" {{ request('sort_by') == 'id_nasabah' ? 'selected' : '' }}>No Rek</option>
                 <option value="created_at" {{ request('sort_by') == 'created_at' ? 'selected' : '' }}>Tanggal</option>
+                
             </select>
 
             <select name="sort_direction" class="form-control mr-1">
@@ -96,12 +99,16 @@
                                     @csrf
                                     @method('PUT')
                                     <select name="status" onchange="this.form.submit()" class="form-control
-                                        {{ $order->status == 'Completed' ? 'bg-success text-white' :
-                                        ($order->status == 'Processing' ? 'bg-primary text-white' :
-                                        ($order->status == 'Rejected' ? 'bg-danger text-white' : 'bg-warning text-dark')) }}">
+    {{ $order->status == 'Completed' ? 'bg-success text-white' :
+    ($order->status == 'Processing' ? 'bg-primary text-white' :
+    ($order->status == 'Rejected' ? 'bg-danger text-white' :
+    ($order->status == 'Cancelled' ? 'bg-secondary text-white' : 'bg-warning text-dark'))) }}">
+
                                         <option value="Completed" {{ $order->status == 'Completed' ? 'selected' : '' }}>Completed</option>
                                         <option value="Processing" {{ $order->status == 'Processing' ? 'selected' : '' }}>Processing</option>
                                         <option value="Rejected" {{ $order->status == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                        <option value="Cancelled" {{ $order->status == 'Cancelled' ? 'selected' : '' }}>Cancelled</option>
+
                                     </select>
                                 </form>
 

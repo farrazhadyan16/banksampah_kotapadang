@@ -25,6 +25,16 @@ class RiwayatController extends Controller
         if ($request->filled("jenis_transaksi")) {
             $query->where("jenis_transaksi", $request->jenis_transaksi);
         }
+        // Exclude setoran yang status-nya Cancelled
+        $query->where(function ($q) {
+            $q->where("jenis_transaksi", "!=", "setoran")->orWhereHas(
+                "setoran",
+                function ($q2) {
+                    $q2->where("status", "!=", "Cancelled");
+                }
+            );
+        });
+
         $riwayat = $query->orderBy("created_at", "desc")->paginate(10);
         return view("riwayat", compact("riwayat"));
     }

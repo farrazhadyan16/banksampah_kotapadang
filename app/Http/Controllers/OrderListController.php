@@ -76,7 +76,7 @@ class OrderListController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            "status" => "required|in:Completed,Processing,Rejected",
+            "status" => "required|in:Completed,Processing,Rejected,Cancelled",
         ]);
 
         DB::transaction(function () use ($request, $id) {

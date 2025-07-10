@@ -9,6 +9,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\NotaController;
 use App\Http\Controllers\OrderListController;
 use App\Http\Controllers\SetoranController;
+use App\Http\Controllers\BatalSetoranController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 
@@ -112,3 +113,12 @@ Route::put("/orderlist/berat/{id}", [
     OrderListController::class,
     "updateBerat",
 ])->name("orderlist.updateBerat");
+
+Route::get("/setoran/batal", [BatalSetoranController::class, "index"])->name(
+    "setoran.batal"
+);
+
+Route::post("/setoran/batal/{id}", [
+    App\Http\Controllers\BatalSetoranController::class,
+    "batalkan",
+])->name("setoran.batal.proses");

@@ -94,6 +94,15 @@
             </a>
         </li>
 
+        <!-- Nav Item - Batalkan Setoran -->
+<li class="nav-item {{ Nav::isRoute('setoran.batal') }}">
+    <a class="nav-link" href="{{ route('setoran.batal') }}">
+        <i class="fas fa-fw fa-ban"></i>
+        <span>{{ __('Batalkan Setoran') }}</span>
+    </a>
+</li>
+
+
         <!-- Nav Item - Riwayat -->
         <li class="nav-item {{ Nav::isRoute('riwayat.show') }}">
             <a class="nav-link" href="{{ route('riwayat.show') }}">
