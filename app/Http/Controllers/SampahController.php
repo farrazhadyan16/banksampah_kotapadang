@@ -13,13 +13,11 @@ class SampahController extends Controller
     {
         $request->validate([
             "jenis_sampah" => "required|string",
-            "harga_satuan" => "required|numeric|min:0",
+            "harga_kg" => "required|numeric|min:0",
             "jumlah" => "required|numeric|min:0",
         ]);
         $sampah = Sampah::findOrFail($id);
-        $sampah->update(
-            $request->only("jenis_sampah", "harga_satuan", "jumlah")
-        );
+        $sampah->update($request->only("jenis_sampah", "harga_kg", "jumlah"));
         return redirect()
             ->back()
             ->with("success", "Data sampah berhasil diperbarui!");

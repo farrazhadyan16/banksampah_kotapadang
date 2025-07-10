@@ -15,30 +15,38 @@ class TarikSaldoController extends Controller
     {
         $request->validate([
             "jumlah" => "required|numeric|min:1000",
+            "nama_bank" => "required|string|max:100",
+            "rek_bank" => "required|digits_between:6,20",
+            "tujuan_bank" => "required|string|max:100",
         ]);
+
         $user = Auth::user();
         $jumlah = $request->jumlah;
+
         if ($user->saldo - $jumlah < 1000) {
             return back()->with(
                 "error",
                 "Saldo tidak cukup. Minimal sisa saldo Rp 1.000 setelah penarikan."
             );
         }
+
         $user->saldo -= $jumlah;
-        // dd(get_class($user));
         $user->save();
-        // 1. Catat ke tabel riwayat
+
         $riwayat = Riwayat::create([
             "id_nasabah" => $user->id,
             "jenis_transaksi" => "tarik_saldo",
         ]);
-        // 2. Catat ke tabel tarik_saldo dan hubungkan ke riwayat
+
         $tarik = TarikSaldo::create([
             "id_nasabah" => $user->id,
             "jumlah" => $jumlah,
             "id_riwayat" => $riwayat->id,
+            "nama_bank" => $request->nama_bank,
+            "rek_bank" => $request->rek_bank,
+            "tujuan_bank" => $request->tujuan_bank,
         ]);
-        // 3. Arahkan ke halaman nota
+
         return redirect()->route("nota.show", $riwayat->id);
     }
 }

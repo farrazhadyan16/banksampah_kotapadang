@@ -6,24 +6,24 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+
 class RegisterController extends Controller
 {
     protected $redirectTo = RouteServiceProvider::HOME;
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+
     public function __construct()
     {
         $this->middleware("guest");
     }
+
     /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * Tambahkan method ini!
      */
+    public function showRegistrationForm()
+    {
+        return view("auth.register"); // ini akan pakai Blade yang kamu buat
+    }
+
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -37,15 +37,11 @@ class RegisterController extends Controller
                 "unique:users",
             ],
             "password" => ["required", "string", "min:8", "confirmed"],
-            "no_hp" => ["required", "digits_between:10,15"], // hanya angka dan minimal 10 digit
+            "no_hp" => ["required", "digits_between:10,15"],
+            "alamat" => ["required", "string"],
         ]);
     }
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param  array  $data
-     * @return \App\Models\User
-     */
+
     protected function create(array $data)
     {
         return User::create([
@@ -54,9 +50,10 @@ class RegisterController extends Controller
             "email" => $data["email"],
             "no_hp" => $data["no_hp"],
             "alamat" => $data["alamat"],
-            "password" => $data["password"],
-            "role" => "nasabah", // role otomatis diset ke nasabah
-            "saldo" => 0, // bisa default ke 0
+            // WAJIB hash!
+            "password" => bcrypt($data["password"]),
+            "role" => "nasabah",
+            "saldo" => 0,
         ]);
     }
 }

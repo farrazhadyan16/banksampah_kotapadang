@@ -22,23 +22,22 @@
                     <input type="text" class="form-control" value="{{ $data['jumlah_' . $key] ?? 0 }}" readonly>
                     <input type="hidden" name="jumlah_{{ $key }}" value="{{ $data['jumlah_' . $key] ?? 0 }}">
                 </div>
-                <div class="col-md-3">
-                    <label class="form-label fw-semibold">Harga {{ $label }}</label>
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">Harga {{ $label }}/Kg</label>
                     <input type="text" class="form-control" value="Rp. {{ number_format($data['harga_' . $key] ?? 0, 0, ',', '.') }}" readonly>
                     <input type="hidden" name="harga_{{ $key }}" value="{{ $data['harga_' . $key] ?? 0 }}">
                 </div>
-                <div class="col-md-3">
+                {{-- <div class="col-md-3">
                     <label class="form-label fw-semibold">Harga Total {{ $label }}</label>
                     <input type="text" class="form-control" value="Rp. {{ number_format(($data['jumlah_' . $key] ?? 0) * ($data['harga_' . $key] ?? 0), 0, ',', '.') }}" readonly>
-                </div>
+                </div> --}}
             @endforeach
-            
                 {{-- Total Keseluruhan --}}
-                <div class="col-md-12">
+                {{-- <div class="col-md-12">
                     <label class="form-label fw-bold">Total</label>
                     <input type="text" class="form-control text-success fw-bold fs-5" value="Rp. {{ number_format($data['total'] ?? 0, 0, ',', '.') }}" readonly>
                     <input type="hidden" name="total" value="{{ $data['total'] ?? 0 }}">
-                </div>
+                </div> --}}
             </div>
             <div class="text-center mt-5">
                 <button type="submit" class="btn btn-primary px-5">OK</button>

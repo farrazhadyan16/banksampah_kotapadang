@@ -33,8 +33,8 @@
                     <tr>
                         <th>ID</th>
                         <th>Jenis Sampah</th>
-                        <th>Harga (Rp)</th>
-                        <th>Jumlah</th>
+                        <th>Harga/Kg (Rp)</th>
+                        <th>Jumlah/Kg</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -43,7 +43,7 @@
                         <tr>
                             <td>{{ str_pad($sampah->id, '0', STR_PAD_LEFT) }}</td>
                             <td>{{ $sampah->jenis_sampah }}</td>
-                            <td>Rp {{ number_format($sampah->harga_satuan, 0, ',', '.') }}</td>
+                            <td>Rp {{ number_format($sampah->harga_kg, 0, ',', '.') }}</td>
                             <td>{{ $sampah->jumlah }}</td>
                             <td>
                                 {{-- Edit Button --}}
@@ -69,11 +69,11 @@
                                                         <input type="text" name="jenis_sampah" class="form-control" value="{{ old('jenis_sampah', $sampah->jenis_sampah) }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Harga Satuan</label>
-                                                        <input type="number" name="harga_satuan" class="form-control" value="{{ old('harga_satuan', $sampah->harga_satuan) }}" required>
+                                                        <label>Harga/Kg (Rp)</label>
+                                                        <input type="number" name="harga_kg" class="form-control" value="{{ old('harga_kg', $sampah->harga_kg) }}" required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label>Jumlah</label>
+                                                        <label>Jumlah/Kg</label>
                                                         <input type="number" name="jumlah" class="form-control" value="{{ old('jumlah', $sampah->jumlah) }}" required>
                                                     </div>
                                                 </div>

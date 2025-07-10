@@ -21,39 +21,39 @@
             <div class="card-body">
                 <h5 class="mb-3">Form Setoran Sampah</h5>
                 @php
-    $sampahList = [
-        'botol_plastik' => 'Botol Plastik',
-        'kaleng' => 'Kaleng',
-        'botol_kaca' => 'Botol Kaca',
-    ];
-@endphp
-@foreach ($sampahList as $key => $label)
-    @php
-        $harga = $hargaSampah[$key] ?? 0;
-    @endphp
-    <div class="row mb-3 align-items-end">
-        <div class="col-md-4">
-            <label>Jumlah {{ $label }}</label>
-            <input type="number" min="0" name="jumlah_{{ $key }}" class="form-control jumlah-input" data-key="{{ $key }}" value="0" readonly>
-        </div>
-        <div class="col-md-3">
-            <label>Harga {{ $label }}</label>
-            <input type="text" class="form-control" value="Rp. {{ number_format($harga, 0, ',', '.') }}" readonly>
-            <input type="hidden" name="harga_{{ $key }}" value="{{ $harga }}">
-        </div>
-        <div class="col-md-3">
-            <label>Harga Total {{ $label }}</label>
-            <input type="text" class="form-control subtotal" id="subtotal_{{ $key }}" value="Rp. 0" readonly>
-        </div>
-    </div>
-    @endforeach
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <label class="fw-bold text-primary">Total Semua Sampah</label>
-            <input type="text" id="totalSemua" class="form-control fw-bold fs-5 text-success" value="Rp. 0" readonly>
-            <input type="hidden" name="total" id="totalHidden" value="0">
-        </div>
-    </div>
+                $sampahList = [
+                    'botol_plastik' => 'Botol Plastik',
+                    'kaleng' => 'Kaleng',
+                    'botol_kaca' => 'Botol Kaca',
+                ];
+                @endphp
+                @foreach ($sampahList as $key => $label)
+                    @php
+                        $harga = $hargaSampah[$key] ?? 0;
+                    @endphp
+                    <div class="row mb-3 align-items-end">
+                        <div class="col-md-6">
+                            <label>Jumlah {{ $label }}</label>
+                            <input type="number" min="0" name="jumlah_{{ $key }}" class="form-control jumlah-input" data-key="{{ $key }}" value="0" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Harga {{ $label }}/Kg</label>
+                            <input type="text" class="form-control" value="Rp. {{ number_format($harga, 0, ',', '.') }}" readonly>
+                            <input type="hidden" name="harga_{{ $key }}" value="{{ $harga }}">
+                        </div>
+                        {{-- <div class="col-md-3">
+                            <label>Harga Total {{ $label }}</label>
+                            <input type="text" class="form-control subtotal" id="subtotal_{{ $key }}" value="Rp. 0" readonly>
+                        </div> --}}
+                    </div>
+                @endforeach
+                {{-- <div class="row mt-4">
+                    <div class="col-md-12">
+                        <label class="fw-bold text-primary">Total Semua Sampah</label>
+                        <input type="text" id="totalSemua" class="form-control fw-bold fs-5 text-success" value="Rp. 0" readonly>
+                        <input type="hidden" name="total" id="totalHidden" value="0">
+                    </div>
+                </div> --}}
                 <div class="text-end mt-4">
                     <button type="submit" class="btn btn-primary ms-2">Konfirmasi Setor</button>
                 </div>
@@ -219,17 +219,6 @@ document.querySelectorAll('.jumlah-input').forEach(input => {
     input.addEventListener('input', updateSubtotal);
 });
 function updateSubtotal() {
-    let total = 0;
-    document.querySelectorAll('.jumlah-input').forEach(input => {
-        const key = input.dataset.key;
-        const jumlah = parseInt(input.value || '0');
-        const harga = parseInt(document.querySelector(`input[name="harga_${key}"]`).value || '0');
-        const subtotal = jumlah * harga;
-        document.getElementById('subtotal_' + key).value = 'Rp. ' + subtotal.toLocaleString('id-ID');
-        total += subtotal;
-    });
-    document.getElementById('totalSemua').value = 'Rp. ' + total.toLocaleString('id-ID');
-    document.getElementById('totalHidden').value = total;
 }
 function renderSummary() {
     const summaryDiv = document.getElementById('summaryDetected');

@@ -67,9 +67,11 @@
                         <th>No Rek</th>
                         <th>Nama</th>
                         <th>Tanggal Dibuat</th>
-                        <th>Tanggal Diupdate</th> {{-- Tambahan --}}
+                        <th>Tanggal Diupdate</th>
+                        <th>Berat/Kg</th>
                         <th>Harga</th>
-                        <th>Status</th>
+                        <th>Verifikator</th>
+                        <th>Status & Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -80,9 +82,16 @@
                             <td>{{ $order->user->no_rek ?? '-' }}</td>
                             <td>{{ trim(($order->user->name ?? '') . ' ' . ($order->user->last_name ?? '')) }}</td>
                             <td>{{ \Carbon\Carbon::parse($order->created_at)->format('d M Y H:i:s') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($order->updated_at)->format('d M Y H:i:s') }}</td> {{-- Tambahan --}}
+                            <td>{{ \Carbon\Carbon::parse($order->updated_at)->format('d M Y H:i:s') }}</td>
+                            <td>
+                                {{ number_format($order->details->sum('berat_sampah'), 3, ',', '.') }} kg
+                            </td>
                             <td>Rp {{ number_format($order->total_harga, 0, ',', '.') }}</td>
                             <td>
+                                {{ $order->details->first()->verifikator ?? '-' }}
+                            </td>                            
+                            <td>
+                                {{-- Status Dropdown --}}
                                 <form method="POST" action="{{ route('orderlist.updateStatus', $order->id) }}">
                                     @csrf
                                     @method('PUT')
@@ -95,11 +104,54 @@
                                         <option value="Rejected" {{ $order->status == 'Rejected' ? 'selected' : '' }}>Rejected</option>
                                     </select>
                                 </form>
+
+                                {{-- Tombol Input Berat --}}
+                                @if ($order->status === 'Processing')
+                                    <button class="btn btn-sm btn-warning mt-2" data-toggle="modal" data-target="#modalBerat{{ $order->id }}">
+                                        Input Berat
+                                    </button>
+                                @else
+                                    <button class="btn btn-sm btn-secondary mt-2" disabled title="Status harus 'Processing' untuk input berat">
+                                        Input Berat
+                                    </button>
+                                @endif
+
+                                {{-- Modal Input Berat (Hanya untuk Processing) --}}
+                                @if ($order->status === 'Processing')
+                                <div class="modal fade" id="modalBerat{{ $order->id }}" tabindex="-1" role="dialog">
+                                    <div class="modal-dialog modal-lg" role="document">
+                                        <form method="POST" action="{{ route('orderlist.updateBerat', $order->id) }}">
+                                            @csrf
+                                            @method('PUT')
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Input Berat Sampah - Ref #{{ $order->id_riwayat }}</h5>
+                                                    <button type="button" class="close" data-dismiss="modal">
+                                                        <span>&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @foreach($order->details as $detail)
+                                                        <div class="mb-3">
+                                                            <label>{{ $detail->sampah->jenis_sampah ?? '-' }}</label>
+                                                            <input type="hidden" name="detail_id[]" value="{{ $detail->id }}">
+                                                            <input type="number" step="0.00001" min="0" class="form-control" name="berat_sampah[]" value="{{ $detail->berat_sampah ?? '' }}" required>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Simpan Berat</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                @endif
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center">Tidak ada data ditemukan.</td>
+                            <td colspan="9" class="text-center">Tidak ada data ditemukan.</td>
                         </tr>
                     @endforelse
                 </tbody>

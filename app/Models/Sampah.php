@@ -11,5 +11,5 @@ class Sampah extends Model
 
     protected $table = "sampah"; // ← beri tahu nama tabel sebenarnya
 
-    protected $fillable = ["jenis_sampah", "harga_satuan", "jumlah"];
+    protected $fillable = ["jenis_sampah", "harga_kg", "jumlah"];
 }

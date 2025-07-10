@@ -107,3 +107,8 @@ Route::post("/setoran/konfirmasi", [
 Route::post("/konfirmasi", [SetoranController::class, "konfirmasi"])->name(
     "final.konfirmasi"
 );
+
+Route::put("/orderlist/berat/{id}", [
+    OrderListController::class,
+    "updateBerat",
+])->name("orderlist.updateBerat");
