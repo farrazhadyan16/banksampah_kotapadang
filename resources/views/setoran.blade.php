@@ -7,7 +7,7 @@
             <div class="card-body text-center">
                 <h4 class="mb-4">Setoran Sampah - Deteksi Otomatis Kamera</h4>
                 <div style="position: relative; width: 100%; max-width: 600px; margin: auto;">
-                    <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px; transform: scaleX(-1);"></video>
+                    <video id="camera" autoplay playsinline muted style="width: 100%; border-radius: 8px;"></video>
                     <div class="text-center mt-3">
                         <button type="button" id="captureBtn" class="btn btn-secondary">Ambil Gambar</button>
                     </div>
@@ -87,8 +87,6 @@ document.getElementById('captureBtn').addEventListener('click', async () => {
     tmpCanvas.width = video.videoWidth;
     tmpCanvas.height = video.videoHeight;
     const tmpCtx = tmpCanvas.getContext('2d');
-    tmpCtx.translate(tmpCanvas.width, 0);
-    tmpCtx.scale(-1, 1);
     tmpCtx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height);
     const imageBase64 = tmpCanvas.toDataURL('image/jpeg').split(',')[1];
     try {
