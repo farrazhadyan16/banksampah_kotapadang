@@ -4,12 +4,18 @@ from ultralytics import YOLO
 import cv2
 import numpy as np
 import base64
+import os
 
 app = Flask(__name__)
 CORS(app)
 
-# Load model YOLO
-model = YOLO("best.pt")
+# Load YOLO model
+model_path = os.path.join(os.path.dirname(__file__), "best.pt")
+model = YOLO(model_path)
+
+@app.route("/")
+def home():
+    return jsonify({"message": "YOLO Flask API is running!"})
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -22,7 +28,7 @@ def predict():
     nparr = np.frombuffer(img_data, np.uint8)
     img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-    # Run model prediction with lower confidence threshold and relaxed IOU
+    # Run model prediction
     results = model.predict(source=img, conf=0.65, iou=0.3)
     result = results[0]
 
@@ -32,12 +38,9 @@ def predict():
     names = result.names
 
     # Filter label berdasarkan confidence minimal 0.65
-    detected = []
-    for i, label_id in enumerate(labels):
-        if confs[i] >= 0.65:
-            detected.append(names[label_id])
+    detected = [names[label_id] for i, label_id in enumerate(labels) if confs[i] >= 0.65]
 
-    # Annotated image with flipped result (mirror effect)
+    # Annotated image with mirror effect
     annotated_img = result.plot()
     annotated_img = cv2.flip(annotated_img, 1)
     _, buffer = cv2.imencode('.jpg', annotated_img)
@@ -48,5 +51,6 @@ def predict():
         "image_with_boxes": img_encoded
     })
 
-if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=5000)
+# Hugging Face akan otomatis menjalankan app.py menggunakan gunicorn/uvicorn
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=7860)

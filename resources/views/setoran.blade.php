@@ -90,11 +90,11 @@ document.getElementById('captureBtn').addEventListener('click', async () => {
     tmpCtx.drawImage(video, 0, 0, tmpCanvas.width, tmpCanvas.height);
     const imageBase64 = tmpCanvas.toDataURL('image/jpeg').split(',')[1];
     try {
-        const response = await fetch('http://127.0.0.1:5000/predict', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: imageBase64 }),
-        });
+        const response = await fetch('https://farraz16-banksampah.hf.space/predict', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: imageBase64 }),
+});
         const result = await response.json();
         if (result.image_with_boxes) {
             const rawImg = new Image();
